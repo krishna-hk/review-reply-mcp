@@ -2,7 +2,7 @@
 
 How we decide the correct themes, sentiment and escalation for each sample review. The answer key follows this guide. If two people label the same review differently, we fix this guide, not just the label.
 
-Sample business: **an invented restaurant** (not a real place). All reviews are synthetic.
+Sample business: **an invented restaurant** (not a real place). All reviews are synthetic and in **English only** for now (Hari's decision, 22 Oct 2026).
 
 ## Rules
 
@@ -17,7 +17,7 @@ Sample business: **an invented restaurant** (not a real place). All reviews are 
 
 ## Themes (restaurant)
 
-The 10 starter themes from the PRD, with a near-miss for each. Two restaurant themes are **proposed** and need Hari's approval before we use them (marked new).
+The 10 starter themes from the PRD, with a near-miss for each. Two restaurant themes marked (new) were approved by Hari on 22 Oct 2026. They also cover food delivery apps, whose reviews are in scope for the sample.
 
 | Theme | Counts as | Near-miss (do not tag) |
 | --- | --- | --- |
