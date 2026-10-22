@@ -46,6 +46,8 @@ Flag when the review contains any of these, even if it is also praise or has oth
 
 Each flag gets a short reason. Mild rudeness, a cold dish or a long wait is **not** an escalation.
 
+**Allergy rule:** escalate when an allergic reaction or other harm actually happened. If staff mishandled or dismissed an allergy question but no harm is reported, do not escalate; tag Menu and dietary needs (negative) and Staff attitude (negative).
+
 ## Sample file columns
 
 `review_id, source, rating, text, review_date, author_name, existing_owner_reply`. The answer key is a separate file with `review_id, themes (theme:sentiment, ...), escalate (yes/no), escalation_reason, confidence, set (tuning/test), notes`.
