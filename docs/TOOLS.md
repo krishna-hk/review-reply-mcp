@@ -46,7 +46,7 @@ Anytime: `get_business_profile`, `load_demo_data`, `delete_my_data`.
 
 ### 3. import_reviews
 - **Does:** adds reviews to this owner's store.
-- **Workflow:** parse CSV -> map columns (rating, text, date, optional author, optional existing reply, optional source) -> reject rows with no text -> skip duplicates (same text, date and author) -> detect language -> enforce row limits -> return counts of added, skipped, rejected and why.
+- **Workflow:** parse CSV -> map columns (rating, text, date, optional author, optional existing reply, optional source) -> reject rows with neither text nor rating (keep rating-only rows) -> skip duplicates (same text, date and author) -> detect language -> enforce row limits -> return counts of added, skipped, rejected and why.
 - **Called:** after the owner pastes or attaches a CSV.
 - **Needs:** `csv_text`; optional `column_map` if headers are unusual; optional `source` label.
 - **Limits:** `MAX_ROWS_PER_IMPORT` per call, `MAX_REVIEWS_PER_OWNER` total.
