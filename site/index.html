@@ -1,0 +1,369 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Review Reply MCP: process and setup</title>
+<meta name="description" content="How the Review Reply MCP turns a CSV of customer reviews into themes, a digest and reply drafts you approve, and how to connect it to your AI app.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#EDF0F4; --card:#FFFFFF; --ink:#0F1A2B; --ink-2:#44546A; --line:#CBD3DF;
+  --star:#F0A500; --flag:#C23B2E; --ok:#0E7C6B; --navy:#0F1A2B; --navy-2:#1B2B45; --on-navy:#E8EDF5;
+  --display:'Bricolage Grotesque','Segoe UI',system-ui,sans-serif;
+  --body:'Figtree','Segoe UI',system-ui,sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,Menlo,Consolas,monospace;
+}
+:root[data-theme="dark"]{--paper:#0B1220;--card:#121C30;--ink:#E8EDF5;--ink-2:#9FB0C8;--line:#26354F;--navy:#060B16;--navy-2:#16233B}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--paper:#0B1220;--card:#121C30;--ink:#E8EDF5;--ink-2:#9FB0C8;--line:#26354F;--navy:#060B16;--navy-2:#16233B}}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font:400 17px/1.6 var(--body)}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--star);outline-offset:2px;border-radius:4px}
+.wrap{max-width:1080px;margin:0 auto;padding:0 16px}
+@media(min-width:720px){.wrap{padding:0 32px}}
+h1,h2,h3{font-family:var(--display);line-height:1.08;margin:0;letter-spacing:-.02em}
+h2{font-size:clamp(1.9rem,4vw,2.7rem);font-weight:800}
+h3{font-size:1.25rem;font-weight:700}
+p{margin:0 0 1em}
+.lede{font-size:1.15rem;color:var(--ink-2);max-width:60ch}
+code,.mono{font-family:var(--mono);font-size:.86em}
+section{padding:72px 0;border-top:1px solid var(--line)}
+section>.wrap>h2{margin-bottom:12px}
+.sub{color:var(--ink-2);max-width:62ch;margin-bottom:32px}
+
+/* top bar */
+header.bar{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--paper) 88%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+header.bar .wrap{display:flex;align-items:center;gap:20px;height:56px}
+.brand{font-family:var(--display);font-weight:800;text-decoration:none;display:flex;gap:8px;align-items:center}
+.brand i{display:inline-block;width:18px;height:18px;background:var(--star);clip-path:polygon(50% 0,62% 36%,100% 38%,70% 60%,80% 100%,50% 76%,20% 100%,30% 60%,0 38%,38% 36%)}
+nav{margin-left:auto;display:none;gap:18px;font-size:.95rem}
+nav a{text-decoration:none;color:var(--ink-2)} nav a:hover{color:var(--ink)}
+@media(min-width:820px){nav{display:flex}}
+.theme{margin-left:auto;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:8px;padding:6px 10px;font:inherit;font-size:.85rem;cursor:pointer}
+@media(min-width:820px){.theme{margin-left:0}}
+
+/* hero */
+.hero{padding-top:56px;padding-bottom:64px}
+.hero h1{font-size:clamp(2.4rem,6.4vw,4.6rem);font-weight:800;max-width:15ch}
+.hero .lede{margin:20px 0 28px}
+.pill{display:inline-block;font-size:.85rem;padding:4px 12px;border:1px solid var(--line);border-radius:99px;background:var(--card);margin-bottom:20px;color:var(--ink-2)}
+.pill b{color:var(--flag)}
+.btns{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:44px}
+.btn{font:600 1rem var(--body);padding:12px 20px;border-radius:10px;text-decoration:none;border:2px solid var(--ink);background:var(--ink);color:var(--paper);cursor:pointer}
+.btn.alt{background:transparent;color:var(--ink)}
+
+/* live trace */
+.trace{background:var(--navy);color:var(--on-navy);border-radius:16px;overflow:hidden;box-shadow:0 24px 60px -30px rgba(15,26,43,.6)}
+.steps{display:flex;overflow-x:auto;background:var(--navy-2);border-bottom:1px solid #2c3f5f}
+.steps button{flex:1 0 auto;background:none;border:0;color:#9FB0C8;font:600 .9rem var(--body);padding:14px 18px;cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap}
+.steps button[aria-selected="true"]{color:#fff;border-bottom-color:var(--star)}
+.panes{display:grid}
+@media(min-width:820px){.panes{grid-template-columns:1fr 1fr}}
+.pane{padding:22px 24px;min-width:0}
+.pane+.pane{border-top:1px solid #2c3f5f}
+@media(min-width:820px){.pane+.pane{border-top:0;border-left:1px solid #2c3f5f}}
+.pane h4{margin:0 0 12px;font:600 .85rem var(--body);color:#9FB0C8}
+.call{font-family:var(--mono);font-size:.85rem;white-space:pre-wrap;word-break:break-word;margin:0}
+.call .fn{color:var(--star)} .call .k{color:#8FB8FF} .call .ok{color:#5FD3B9} .call .bad{color:#FF8A7D}
+.review{background:#fff;color:#0F1A2B;border-radius:10px;padding:14px 16px;font-size:.95rem;margin-bottom:14px}
+.review .stars{color:var(--star);letter-spacing:2px}
+.review mark{background:#FFE9A8;color:inherit;border-radius:3px;padding:0 2px}
+.review mark.neg{background:#F8CFC9}
+.who{font-size:.8rem;color:#9FB0C8;margin-top:10px}
+.nav-demo{display:flex;gap:10px;padding:14px 24px;border-top:1px solid #2c3f5f}
+.nav-demo button{background:#fff;color:#0F1A2B;border:0;border-radius:8px;padding:8px 16px;font:600 .9rem var(--body);cursor:pointer}
+.nav-demo button:disabled{opacity:.4;cursor:default}
+
+/* split */
+.split{display:grid;gap:16px}
+@media(min-width:760px){.split{grid-template-columns:1fr 1fr}}
+.box{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:24px}
+.box h3{margin-bottom:10px}
+.box ul{margin:0;padding-left:1.1em;color:var(--ink-2)}
+.box li{margin:.35em 0}
+.box.ai{border-top:5px solid var(--star)} .box.code{border-top:5px solid var(--ok)}
+
+/* flow */
+.flow{list-style:none;margin:0;padding:0;counter-reset:s;display:grid;gap:0}
+.flow li{counter-increment:s;display:grid;grid-template-columns:44px 1fr;gap:16px;padding-bottom:28px;position:relative}
+.flow li::before{content:counter(s);width:44px;height:44px;border-radius:50%;background:var(--ink);color:var(--paper);display:grid;place-items:center;font:700 1.1rem var(--display);position:relative;z-index:1}
+.flow li::after{content:"";position:absolute;left:21px;top:44px;bottom:0;width:2px;background:var(--line)}
+.flow li:last-child::after{display:none}
+.flow h3{margin:6px 0 4px}
+.flow p{color:var(--ink-2);margin:0 0 6px;max-width:64ch}
+.tag{font-family:var(--mono);font-size:.78rem;background:var(--card);border:1px solid var(--line);border-radius:6px;padding:2px 8px;margin-right:6px;display:inline-block}
+.you{display:inline-block;font-size:.8rem;font-weight:600;padding:2px 10px;border-radius:99px;background:var(--star);color:#1a1200;margin-bottom:4px}
+
+/* tools */
+.tools{display:grid;gap:10px}
+details.tool{background:var(--card);border:1px solid var(--line);border-radius:12px}
+details.tool summary{list-style:none;cursor:pointer;padding:14px 18px;display:grid;grid-template-columns:1fr;gap:2px;align-items:center}
+details.tool summary::-webkit-details-marker{display:none}
+@media(min-width:760px){details.tool summary{grid-template-columns:260px 1fr 28px;gap:16px}}
+details.tool summary .n{font-family:var(--mono);font-weight:600;font-size:.92rem}
+details.tool summary .d{color:var(--ink-2);font-size:.95rem}
+details.tool summary::after{content:"+";font:600 1.4rem var(--display);text-align:right;display:none}
+@media(min-width:760px){details.tool summary::after{display:block}}
+details.tool[open] summary::after{content:"\2212"}
+.tbody{padding:4px 18px 18px;display:grid;gap:14px;border-top:1px solid var(--line);padding-top:16px}
+@media(min-width:760px){.tbody{grid-template-columns:1fr 1fr}}
+.tbody h4{margin:0 0 4px;font:700 .95rem var(--body)}
+.tbody p{margin:0;color:var(--ink-2);font-size:.95rem}
+.tbody ul{margin:0;padding-left:1.1em;color:var(--ink-2);font-size:.95rem}
+
+/* connect */
+.connect{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.urlrow{padding:20px 24px;border-bottom:1px solid var(--line);display:grid;gap:8px}
+.urlrow label{font-weight:600}
+.urlrow input{width:100%;font:500 1rem var(--mono);padding:12px 14px;border-radius:10px;border:2px solid var(--line);background:var(--paper);color:var(--ink)}
+.urlrow small{color:var(--ink-2)}
+.tabs{display:flex;overflow-x:auto;border-bottom:1px solid var(--line)}
+.tabs button{flex:1 0 auto;background:none;border:0;border-bottom:3px solid transparent;padding:14px 18px;font:600 .95rem var(--body);color:var(--ink-2);cursor:pointer}
+.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--star)}
+.tabpanel{padding:22px 24px}
+.tabpanel ol{margin:0 0 16px;padding-left:1.2em}
+.tabpanel li{margin:.4em 0}
+pre.cmd{position:relative;background:var(--navy);color:var(--on-navy);border-radius:10px;padding:16px 70px 16px 16px;margin:0 0 12px;overflow-x:auto;font:400 .85rem/1.5 var(--mono)}
+pre.cmd button{position:absolute;right:10px;top:10px;font:600 .78rem var(--body);padding:5px 10px;border-radius:6px;border:0;background:#fff;color:#0F1A2B;cursor:pointer}
+.note{font-size:.9rem;color:var(--ink-2);border-left:4px solid var(--star);padding:4px 0 4px 14px;margin:14px 0 0}
+.first{margin-top:18px}
+.first h3{margin-bottom:10px}
+
+/* modes + safety + status */
+table{border-collapse:collapse;width:100%;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;font-size:.97rem}
+th,td{padding:12px 16px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+th{font-family:var(--display);font-weight:700}
+tr:last-child td{border-bottom:0}
+.scroll{overflow-x:auto}
+.safe{display:grid;gap:14px}
+@media(min-width:760px){.safe{grid-template-columns:repeat(3,1fr)}}
+.safe .box h3{font-size:1.1rem}
+.safe .box p{color:var(--ink-2);margin:0;font-size:.97rem}
+.safe .box.red{border-top:5px solid var(--flag)}
+.status td:last-child{font-weight:600}
+.s-done{color:var(--ok)} .s-now{color:var(--star)} .s-todo{color:var(--ink-2)}
+footer{padding:40px 0 60px;border-top:1px solid var(--line);color:var(--ink-2);font-size:.9rem}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+
+<header class="bar">
+  <div class="wrap">
+    <a class="brand" href="#top"><i aria-hidden="true"></i>Review Reply MCP</a>
+    <nav aria-label="Sections">
+      <a href="#roles">Who does what</a><a href="#sop">Process</a><a href="#tools">Tools</a><a href="#connect">Connect</a><a href="#modes">Modes</a><a href="#safety">Safety</a>
+    </nav>
+    <button class="theme" id="themeBtn" type="button">Dark mode</button>
+  </div>
+</header>
+
+<main id="top">
+<div class="wrap hero">
+  <span class="pill"><b>In planning.</b> The server is not live yet, so the link below is a placeholder.</span>
+  <h1>From a CSV of reviews to replies you approve.</h1>
+  <p class="lede">Connect this server to the AI app you already use. It reads your reviews, groups them by theme, flags the serious ones, and drafts replies in your voice. You decide what gets posted.</p>
+  <div class="btns">
+    <a class="btn" href="#connect">Connect your AI app</a>
+    <a class="btn alt" href="#sop">See the full process</a>
+  </div>
+
+  <div class="trace" aria-label="Interactive example of one review moving through the tools">
+    <div class="steps" role="tablist" id="steps"></div>
+    <div class="panes">
+      <div class="pane"><h4>What the owner sees</h4><div id="left"></div></div>
+      <div class="pane"><h4>What the tool call looks like</h4><pre class="call" id="right"></pre></div>
+    </div>
+    <div class="nav-demo">
+      <button type="button" id="prev">Back</button>
+      <button type="button" id="next">Next step</button>
+    </div>
+  </div>
+</div>
+
+<section id="roles"><div class="wrap">
+  <h2>The AI reads and writes. The server counts and checks.</h2>
+  <p class="sub">Language models are good at reading a review and writing a reply. They are unreliable at counting, so code does that. The split keeps every number in the digest real.</p>
+  <div class="split">
+    <div class="box ai"><h3>Your AI app does</h3><ul>
+      <li>Reads each review and picks its themes</li>
+      <li>Judges whether the sentiment is positive or negative</li>
+      <li>Notices reviews that need a human</li>
+      <li>Writes the digest in plain language</li>
+      <li>Drafts each reply in your tone</li></ul></div>
+    <div class="box code"><h3>The server does</h3><ul>
+      <li>Stores reviews, tags, drafts and your policies</li>
+      <li>Counts themes and compares periods</li>
+      <li>Copies quotes word for word from the original review</li>
+      <li>Checks drafts for banned promises and wrong format</li>
+      <li>Keeps each owner's data separate and tracks usage</li></ul></div>
+  </div>
+</div></section>
+
+<section id="sop"><div class="wrap">
+  <h2>The process, step by step</h2>
+  <p class="sub">The same routine every time. Steps marked "you" need a person. Everything else the AI and the server do between them.</p>
+  <ol class="flow">
+    <li><div><span class="you">You</span><h3>Set up your business profile</h3><p>Tell the AI your business name, how you want to sound, and your rules (for example, "never promise refunds in public replies"). This is saved once.</p><span class="tag">set_business_profile</span></div></li>
+    <li><div><span class="you">You</span><h3>Bring your reviews</h3><p>Export a CSV from your review platform and attach or paste it. No CSV yet? Load the demo reviews to try the full flow.</p><span class="tag">import_reviews</span><span class="tag">load_demo_data</span></div></li>
+    <li><div><h3>Tag every review</h3><p>The AI takes the reviews in batches of 20, assigns one or more themes with a sentiment to each, and flags serious ones. The server rejects unknown themes and saves the rest.</p><span class="tag">get_untagged_reviews</span><span class="tag">save_tags</span></div></li>
+    <li><div><span class="you">You</span><h3>Read the digest</h3><p>Top praise, top complaints, what is rising, what is new, and real quotes. Open any theme to see the reviews behind it.</p><span class="tag">get_digest</span><span class="tag">get_theme_reviews</span></div></li>
+    <li><div><span class="you">You</span><h3>Handle flagged reviews yourself</h3><p>Reviews mentioning health, safety, legal threats or discrimination are not drafted. They are listed for a person to handle.</p></div></li>
+    <li><div><h3>Draft the replies</h3><p>For each remaining review the AI receives the review, your profile and your rules, then writes a draft. The server checks it and sends back the exact rule if it fails, so the AI can rewrite.</p><span class="tag">get_review_for_reply</span><span class="tag">save_draft</span></div></li>
+    <li><div><span class="you">You</span><h3>Approve, edit or reject</h3><p>Go through the drafts. You can approve all the safe ones at once. Approving marks a draft ready; you copy it and post it yourself.</p><span class="tag">review_drafts</span></div></li>
+    <li><div><span class="you">You</span><h3>Log fixes and check they worked</h3><p>When you change something (for example, hire a second person for lunch), log it. Weeks later, compare mentions before and after.</p><span class="tag">record_fix</span><span class="tag">check_fix_impact</span></div></li>
+  </ol>
+</div></section>
+
+<section id="tools"><div class="wrap">
+  <h2>The 14 tools</h2>
+  <p class="sub">Open a tool to see when it is called and what data it needs. The full version is in <code>docs/TOOLS.md</code>.</p>
+  <div class="tools" id="toolList"></div>
+</div></section>
+
+<section id="connect"><div class="wrap">
+  <h2>Connect it to your AI app</h2>
+  <p class="sub">Paste the server link once. The commands and steps below update with it. Menu names in AI apps change often, so treat the steps as a guide and check the app's own help.</p>
+  <div class="connect">
+    <div class="urlrow">
+      <label for="url">Your server link</label>
+      <input id="url" type="text" value="https://YOUR-SERVER/mcp" spellcheck="false" autocomplete="off">
+      <small>Placeholder until the server is live. Your personal link will be sent when you are invited. Treat it like a password.</small>
+    </div>
+    <div class="tabs" role="tablist" id="ctabs"></div>
+    <div class="tabpanel" id="cpanel"></div>
+  </div>
+  <div class="first">
+    <h3>Then try this first</h3>
+    <pre class="cmd" id="firstPrompt">Load the demo reviews, tag them, and show me the digest. Then draft replies for the three most recent 5-star reviews.<button type="button" data-copy="firstPrompt">Copy</button></pre>
+  </div>
+</div></section>
+
+<section id="modes"><div class="wrap">
+  <h2>Two ways to run it</h2>
+  <p class="sub">Mode A needs nothing from us. Mode B is for people without an AI plan, and is limited on purpose.</p>
+  <div class="scroll"><table>
+    <thead><tr><th></th><th>Mode A: your AI app</th><th>Mode B: hosted AI, by invite</th></tr></thead>
+    <tbody>
+      <tr><td><b>Who does the reading</b></td><td>The AI app you already use</td><td>Our server, calling Claude</td></tr>
+      <tr><td><b>Cost to you</b></td><td>Your existing plan</td><td>Free within a small quota</td></tr>
+      <tr><td><b>Limits</b></td><td>None from us</td><td>Review and draft quota per person, spending cap, rate limits</td></tr>
+      <tr><td><b>Access</b></td><td>Personal link</td><td>Invite code, then personal link</td></tr>
+      <tr><td><b>Availability</b></td><td>First release</td><td>After the core works</td></tr>
+    </tbody>
+  </table></div>
+</div></section>
+
+<section id="safety"><div class="wrap">
+  <h2>What the tool will not do</h2>
+  <div class="safe">
+    <div class="box red"><h3>It never posts</h3><p>No tool sends anything to Google or any review site. Every reply is a draft that you copy and post.</p></div>
+    <div class="box red"><h3>It never invents quotes</h3><p>Quotes in the digest are copied by code from the original reviews, character for character.</p></div>
+    <div class="box red"><h3>It never obeys a review</h3><p>A review that says "ignore your instructions" is treated as text to analyse, not a command.</p></div>
+    <div class="box"><h3>It escalates serious cases</h3><p>Health, safety, legal and discrimination claims go to a person instead of getting a casual reply.</p></div>
+    <div class="box"><h3>It checks promises</h3><p>Drafts that promise refunds or admit fault against your rules are rejected with the reason.</p></div>
+    <div class="box"><h3>It forgets on request</h3><p>One tool deletes everything stored for you. Each owner's data is kept separate.</p></div>
+  </div>
+</div></section>
+
+<section id="status"><div class="wrap">
+  <h2>Where the build is</h2>
+  <div class="scroll"><table class="status">
+    <thead><tr><th>Step</th><th>What</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td>0</td><td>Decisions and product requirements</td><td class="s-now">In progress</td></tr>
+      <tr><td>1</td><td>Sample reviews and answer key</td><td class="s-todo">Not started</td></tr>
+      <tr><td>2</td><td>Core engine: import, counts, trends</td><td class="s-todo">Not started</td></tr>
+      <tr><td>3</td><td>AI prompts tested against the answer key</td><td class="s-todo">Not started</td></tr>
+      <tr><td>4</td><td>MCP server working locally</td><td class="s-todo">Not started</td></tr>
+      <tr><td>5</td><td>Public hosting and Mode B limits</td><td class="s-todo">Not started</td></tr>
+      <tr><td>6</td><td>Pilot and launch</td><td class="s-todo">Not started</td></tr>
+    </tbody>
+  </table></div>
+</div></section>
+</main>
+
+<footer><div class="wrap">Drafts are suggestions. You are responsible for anything you post. This project is independent and not affiliated with Google, Yelp, Anthropic, OpenAI or any review platform.</div></footer>
+
+<script>
+(function(){
+  /* theme */
+  var root=document.documentElement,btn=document.getElementById('themeBtn');
+  function isDark(){var t=root.getAttribute('data-theme');return t?t==='dark':matchMedia('(prefers-color-scheme: dark)').matches}
+  function sync(){btn.textContent=isDark()?'Light mode':'Dark mode'}
+  btn.onclick=function(){root.setAttribute('data-theme',isDark()?'light':'dark');sync()};sync();
+
+  /* hero demo */
+  var S=[
+   {t:'Import',
+    L:'<div class="review"><div class="stars">★★☆☆☆</div>"Waited 50 minutes for a table even though we booked. Food was great, but our waiter was rude when we asked about it. Never again."<div class="who">Review 41 of 100 in your CSV</div></div><p style="color:#9FB0C8;margin:0;font-size:.9rem">100 reviews added. 2 duplicates skipped.</p>',
+    R:'<span class="fn">import_reviews</span>(\n  <span class="k">csv_text</span>: "rating,text,date\\n2,\\"Waited 50 minutes…",\n  <span class="k">source</span>: "google"\n)\n\n<span class="ok">→ added: 100, skipped_duplicates: 2, rejected: 0\n→ next_step: get_untagged_reviews</span>'},
+   {t:'Tag',
+    L:'<div class="review"><div class="stars">★★☆☆☆</div><mark class="neg">Waited 50 minutes for a table</mark> even though we booked. <mark>Food was great</mark>, but <mark class="neg">our waiter was rude</mark> when we asked about it.<div class="who">AI picks the themes. Server validates them.</div></div><p style="color:#9FB0C8;margin:0;font-size:.9rem">Three tags saved. Not escalated.</p>',
+    R:'<span class="fn">save_tags</span>([{\n  <span class="k">review_id</span>: 41,\n  <span class="k">tags</span>: [\n    {theme:"Wait time",     sentiment:"negative"},\n    {theme:"Food quality",   sentiment:"positive"},\n    {theme:"Staff attitude", sentiment:"negative"}\n  ],\n  <span class="k">escalate</span>: false\n}])\n\n<span class="ok">→ saved: 1, untagged_remaining: 59</span>'},
+   {t:'Digest',
+    L:'<div class="review"><b>Top complaint: wait time</b><br>31 of 100 reviews, up from 19 last period.<br><br>"Waited 50 minutes for a table even though we booked."<div class="who">Counts by code. Quote copied exactly from review 41.</div></div>',
+    R:'<span class="fn">get_digest</span>(<span class="k">period</span>: "90d")\n\n<span class="ok">→ top_negative: [\n    {theme:"Wait time", count:31, prev:19,\n     quotes:[{review_id:41, text:"Waited 50 minutes…"}]}\n  ]\n→ escalated_waiting: 3</span>'},
+   {t:'Draft',
+    L:'<div class="review"><b>Draft reply</b><br>Thank you for telling us, and we are sorry the wait ran long even with a booking. We are looking at how we seat reservations. Please email us at the address on our page so we can follow up on your visit.<div class="who">Tone: warm, short. Policy: no refund promises.</div></div>',
+    R:'<span class="fn">get_review_for_reply</span>(<span class="k">review_id</span>: 41)\n<span class="ok">→ review, tags, profile, policies</span>\n\n<span class="fn">save_draft</span>(\n  <span class="k">review_id</span>: 41,\n  <span class="k">draft_text</span>: "Thank you for telling us…"\n)\n\n<span class="ok">→ saved. checks: no banned promises, length ok</span>\n\nIf a draft promised a refund:\n<span class="bad">→ rejected: "refund promise" breaks policy 1</span>'},
+   {t:'Approve',
+    L:'<div class="review"><b>Drafts ready: 71</b><br>Approved: 0 &nbsp; Flagged for you: 3<br><br>Approve all 52 safe drafts (4 and 5 stars, no flags)?<div class="who">Approving marks a draft ready. You copy it and post it yourself.</div></div>',
+    R:'<span class="fn">review_drafts</span>(\n  <span class="k">actions</span>: [{review_id:41, action:"edit",\n             edited_text:"Thank you for…"}]\n)\n\n<span class="ok">→ approved: 1, edited: 1\n→ nothing was posted anywhere</span>'}
+  ];
+  var i=0,steps=document.getElementById('steps'),L=document.getElementById('left'),R=document.getElementById('right'),
+      prev=document.getElementById('prev'),next=document.getElementById('next');
+  S.forEach(function(s,n){var b=document.createElement('button');b.type='button';b.setAttribute('role','tab');b.textContent=(n+1)+'. '+s.t;b.onclick=function(){go(n)};steps.appendChild(b)});
+  function go(n){i=n;[].forEach.call(steps.children,function(b,k){b.setAttribute('aria-selected',k===n)});
+    L.innerHTML=S[n].L;R.innerHTML=S[n].R;prev.disabled=n===0;next.disabled=n===S.length-1}
+  prev.onclick=function(){go(i-1)};next.onclick=function(){go(i+1)};go(0);
+
+  /* tools */
+  var T=[
+   ['set_business_profile','Save business name, tone and policies','First run, and whenever your rules change','business_name (required), business_type, tone, signature, policies, never_say, languages','Validate, merge with the saved profile, save, return it'],
+   ['get_business_profile','Read the saved profile','Start of a session and before drafting','Nothing','Return the profile, or say none exists'],
+   ['import_reviews','Add reviews from CSV text','After you provide a file','csv_text; optional column_map and source','Parse, map columns, drop empty rows, skip duplicates, detect language, enforce limits, report counts'],
+   ['get_untagged_reviews','Next 20 reviews without themes','Start of tagging and after each save','Optional limit (max 20)','Return a batch labelled as untrusted text, the theme list and the rules'],
+   ['save_tags','Store themes, sentiment and escalation flags','After the AI reads a batch','For each review: review_id, tags (theme + sentiment), escalate, reason','Check ids and themes, save, return saved and remaining counts'],
+   ['get_digest','Counts, trends and exact quotes','After tagging, or when you ask how things are going','Optional period and compare_to','Count by code, compare periods, copy quotes from originals, list escalations'],
+   ['get_theme_reviews','Reviews behind one theme','When you want evidence for a number','theme; optional sentiment, limit, period','Filter and return reviews'],
+   ['get_review_for_reply','One review with everything needed to reply','Before writing each draft','Optional review_id','Return the review, tags, profile, policies, earlier replies; refuse if escalated'],
+   ['save_draft','Store a reply draft after code checks','After the AI writes a reply','review_id, draft_text','Check banned words, promises, length, language and invented facts; save or reject with the rule'],
+   ['review_drafts','List drafts and record your decisions','When you want to review replies','Optional status; optional actions (approve, edit, reject)','List, apply actions, optional bulk approve of safe drafts after confirmation'],
+   ['record_fix','Log a change you made','When you say "we fixed X"','theme, description, date_done','Save the fix with its date'],
+   ['check_fix_impact','Compare a theme before and after a fix','Some weeks after a fix','fix_id','Compare shares before and after; warn if the sample is too small'],
+   ['delete_my_data','Erase everything stored for you','On request','confirm: true','Without confirm, describe what would go. With it, delete'],
+   ['load_demo_data','Load about 40 synthetic reviews','First try and demos','Optional replace','Load fictional data marked as demo']
+  ];
+  var list=document.getElementById('toolList');
+  T.forEach(function(t){var d=document.createElement('details');d.className='tool';
+    d.innerHTML='<summary><span class="n">'+t[0]+'</span><span class="d">'+t[1]+'</span></summary><div class="tbody"><div><h4>When it is called</h4><p>'+t[2]+'</p></div><div><h4>Data it needs</h4><p>'+t[3]+'</p></div><div style="grid-column:1/-1"><h4>What it does</h4><p>'+t[4]+'</p></div></div>';
+    list.appendChild(d)});
+
+  /* connect */
+  var url=document.getElementById('url'),ctabs=document.getElementById('ctabs'),cpanel=document.getElementById('cpanel');
+  function esc(s){return s.replace(/[&<>]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c]})}
+  var C=[
+   {n:'Claude',h:function(u){return '<ol><li>Open <b>Settings</b>, then <b>Connectors</b>.</li><li>Choose <b>Add custom connector</b>.</li><li>Name it "Review Reply" and paste the server link.</li><li>Save, then switch the connector on in a new chat.</li></ol><pre class="cmd" id="c1">'+esc(u)+'<button type="button" data-copy="c1">Copy</button></pre><p class="note">Custom connectors may need a paid plan, and team workspaces may need an admin to allow them.</p>'}},
+   {n:'Claude Code',h:function(u){return '<p>Run this in a terminal:</p><pre class="cmd" id="c2">claude mcp add --transport http review-reply '+esc(u)+'<button type="button" data-copy="c2">Copy</button></pre><p>Then start <code>claude</code> and type <code>/mcp</code> to check it is connected.</p>'}},
+   {n:'ChatGPT',h:function(u){return '<ol><li>Turn on <b>Developer mode</b> in the settings (paid plans).</li><li>Add a new connector and paste the server link.</li><li>Pick it for a chat from the tools menu.</li></ol><pre class="cmd" id="c3">'+esc(u)+'<button type="button" data-copy="c3">Copy</button></pre><p class="note">ChatGPT needs a public HTTPS link. A link on your own computer will not work.</p>'}},
+   {n:'Gemini and others',h:function(u){return '<p>The regular Gemini app does not accept custom connectors at the moment. Gemini CLI and Gemini Enterprise do, and so do some other tools such as Cursor and VS Code. They all ask for the same thing: a server link of type "HTTP" or "Streamable HTTP".</p><pre class="cmd" id="c4">'+esc(u)+'<button type="button" data-copy="c4">Copy</button></pre>'}}
+  ];
+  var cur=0;
+  function renderC(){cpanel.innerHTML=C[cur].h(url.value.trim()||'https://YOUR-SERVER/mcp');
+    [].forEach.call(ctabs.children,function(b,k){b.setAttribute('aria-selected',k===cur)})}
+  C.forEach(function(c,k){var b=document.createElement('button');b.type='button';b.setAttribute('role','tab');b.textContent=c.n;b.onclick=function(){cur=k;renderC()};ctabs.appendChild(b)});
+  url.addEventListener('input',renderC);renderC();
+
+  document.addEventListener('click',function(e){var b=e.target.closest('[data-copy]');if(!b)return;
+    var el=document.getElementById(b.getAttribute('data-copy'));var txt=el.firstChild.textContent;
+    function done(){var o=b.textContent;b.textContent='Copied';setTimeout(function(){b.textContent=o},1500)}
+    if(navigator.clipboard){navigator.clipboard.writeText(txt).then(done,function(){})}else{done()}});
+})();
+</script>
+</body>
+</html>
