@@ -24,7 +24,7 @@ R022,Cleanliness:negative|Staff attitude:negative,yes,Foreign object (hair) in f
 R023,Staff attitude:positive,no,,high,tuning,
 R024,Price and value:negative,no,,high,tuning,
 R025,Other:negative,no,,high,tuning,spam
-R026,Staff attitude:positive|Delivery and packaging:positive,no,,medium,tuning,delivery; courier counted under Staff attitude
+R026,Delivery and packaging:positive,no,,medium,tuning,delivery; courier matters go under Delivery and packaging only
 R027,Wait time and speed:negative|Staff attitude:positive,no,,medium,tuning,
 R028,Other:negative,no,,high,tuning,"injection attempt, handled as spam; real complaint inside is ignored"
 R029,Product or food quality:positive|Booking and ordering:negative,no,,high,tuning,
@@ -33,7 +33,7 @@ R031,Cleanliness:positive,no,,high,tuning,
 R032,Staff attitude:negative,yes,Allegation of deliberate overcharging / fraud,high,tuning,billing dispute with fraud allegation; not a Price and value complaint
 R033,Wait time and speed:positive,no,,high,tuning,
 R034,Product or food quality:negative,no,,high,tuning,mixed praise and complaint in one theme; one overall tag (negative)
-R035,Delivery and packaging:negative|Product or food quality:negative|Staff attitude:positive,no,,medium,tuning,delivery
+R035,Delivery and packaging:negative|Product or food quality:negative,no,,medium,tuning,delivery; courier matters go under Delivery and packaging only; one overall tag per theme
 R036,Atmosphere and comfort:positive|Price and value:positive,no,,high,tuning,
 R037,Communication and follow-up:negative|Booking and ordering:negative,no,,high,tuning,
 R038,Price and value:positive,no,,high,tuning,
