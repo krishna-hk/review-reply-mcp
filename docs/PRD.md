@@ -2,6 +2,8 @@
 
 thOct 21, 2026 · @Hari
 
+> **Revision 2 (23 Oct 2026), approved by Hari.** Changes since the first version: TypeScript on Cloudflare Workers and D1 replaces Python; two new themes (Menu and dietary needs, Delivery and packaging); English only for now, with food delivery apps in scope; rating-only reviews get a reply and empty rows are ignored; one sentiment per theme with no neutral tag; serious reviews and legal threats go to an owner-approval-only lane with one holding draft and a 12-hour target; spam and injection attempts are ignored and never replied to; repeated-phrase alerts are not in version 1. Details: `docs/ANALYTICS_AND_ESCALATION.md` and `docs/LABELLING_GUIDE.md`.
+
 ## 1. How to read this document
 
 This is the full plan for building the first version (the MVP) of the Review Reply Tool as an MCP product, written so you can read it chapter by chapter without a technical background.
@@ -146,7 +148,8 @@ Version 1 is an MCP server that takes a CSV of reviews and returns themes, a dig
 | --- | --- |
 | Getting reviews in | CSV upload with flexible column matching, cleaning, duplicate removal |
 | Theme tagging | Each review gets one or more themes, each with positive or negative sentiment |
-| Escalation | Serious reviews (health, legal, safety, discrimination, threats) are flagged for a human instead of drafted |
+| Escalation | Serious reviews (health, legal, safety, discrimination, harassment, fraud claims) go to an owner-approval-only lane: one careful holding draft, approved one by one, never in bulk, with a 12-hour target shown in the digest |
+| Spam and injection | Spam and review text that tries to give orders to the AI is tagged Other, ignored and never replied to |
 | Digest | Top praise, top complaints, what is rising, what is new, with exact quotes and review IDs as evidence |
 | Reply drafts | Replies in the owner's tone, following the owner's policies, never posted automatically |
 | Business profile | Business type, tone, sign-off, policies, topics always escalated |
@@ -260,15 +263,18 @@ We start with a fixed list so the AI uses the same labels every time. The owner 
 | Location and access | "Hard to park" |
 | Booking and ordering | "Could not get an appointment" |
 | Communication and follow-up | "Never called me back" |
-| Consistency | "Great last time, poor this time" |
-| Other | Anything else |
+| Consistency | "Great last time, poor this time", or a problem that keeps happening |
+| Menu and dietary needs | "Nothing vegan on the menu", "great gluten-free options" |
+| Delivery and packaging | "Soup leaked in the bag", "arrived hot and neat" |
+| Other | Anything else, including spam |
 
-The list above is for general local businesses. In checkpoint 0 we choose the first business type, and I add a few type-specific themes, for example "Treatment results" for a clinic or "Delivery and packaging" for a cloud kitchen.
+The list above is for restaurants and food delivery apps, the first business type. Other business types, such as clinics or freelancers, would get their own theme pack later. Version 1 supports English only. The tagging rules are in `docs/LABELLING_GUIDE.md`.
 
 ### What the AI returns for each review
 
-- Zero or more themes, each marked positive or negative.
+- Zero or more themes, each marked positive or negative. Each theme appears once per review, with one overall sentiment. There is no neutral tag.
 - An escalation flag with a short reason when the review needs a human, such as a health or safety claim, a legal threat, discrimination or harassment.
+- A spam flag for adverts, nonsense and injection attempts (text that tries to give orders to the AI). These are tagged Other, negative, and never replied to.
 - A confidence note when the review is unclear, for example sarcasm.
 
 The exact quotes shown in the digest are always copied by code from the original review. The AI never retypes a quote.
@@ -382,7 +388,7 @@ The sample includes deliberately awkward cases: reviews with two themes, sarcasm
 | --- | --- | --- | --- |
 | 20 to 30 real example reviews | Make the sample realistic | You, with personal details removed | Free |
 | Spreadsheet (Google Sheets or Excel) | Labelling and comparing | You already have one, or it is free | Free |
-| Python | Generating and checking the CSV | python.org, free | Free |
+| Node.js 22 or newer | Generating and checking the CSV | nodejs.org, free | Free |
 | Public review datasets, optional | Extra variety | Dataset sites such as Kaggle or the Yelp open dataset. We check each licence first | Free, licence permitting |
 
 ### Set 1: What I need from you
@@ -414,9 +420,9 @@ The tagging itself is faked in this checkpoint by reading the answer key, so we 
 
 | Deliverable | How I build it |
 | --- | --- |
-| CSV importer | Python. Recognises common column names (for example "review", "comment" and "text" all mean the review text) and shows a preview before saving |
+| CSV importer | TypeScript. Recognises common column names (for example "review", "comment" and "text" all mean the review text) and shows a preview before saving |
 | Cleaning rules | Trim blanks, remove exact duplicates using a fingerprint of the content, standardise dates, detect language, cap file size |
-| Database | SQLite, a single file, free and easy to back up. Tables for reviews, tags, escalations, drafts, business profiles, fixes and usage |
+| Database | SQLite-compatible SQL. A local SQLite file during development, Cloudflare D1 when hosted. Tables for reviews, tags, flags, drafts, business profiles, fixes and usage, every table scoped to one owner |
 | Analytics | Plain code that counts themes per period and compares the latest period to the previous one |
 | Digest data builder | Returns top praised themes, top complaints, rising and new themes, each with counts and quote IDs |
 | Automated tests | A test suite that proves the importer and counters behave correctly on messy files |
@@ -430,17 +436,17 @@ The tagging itself is faked in this checkpoint by reading the answer key, so we 
 | Dates are ambiguous (03/04 could be 3 April or 4 March) | We set the default for your market in checkpoint 0 and warn when a file looks inconsistent |
 | The same file is uploaded twice | Each review gets a fingerprint from its content, so repeats are skipped and counted, not duplicated |
 | Tiny samples make a trend look dramatic | A minimum count before any trend is reported, and counts always shown beside percentages |
-| Rating-only reviews have no text | They are stored and counted in star totals but skipped by theme tagging |
+| Rating-only reviews have no text | They are stored, counted in star totals and given a short reply, but skipped by theme tagging. Rows with no rating and no text are ignored |
 | Someone uploads a huge file | A row limit per upload, with a friendly message |
-| SQLite data is lost when a free host restarts | We plan persistent storage in checkpoint 5. During development it is only a local file |
+| Data is lost when a free host restarts | D1 keeps data between restarts. During development it is only a local file. Verify D1 limits at deploy time |
 
 ### Resources we use, and where we get them
 
 | Resource | What for | Where from | Cost |
 | --- | --- | --- | --- |
-| Python 3.11 or newer | The programming language | python.org | Free |
-| SQLite | The database, built into Python | Included | Free |
-| pytest | Running the automated tests | Installed with pip from the Python Package Index | Free |
+| Node.js 22 or newer and TypeScript | The programming language | nodejs.org | Free |
+| SQLite (built into Node.js) and Cloudflare D1 | The database, locally and hosted | Included, and a free Cloudflare account at checkpoint 5 (verify limits at deploy time) | Free tier, to be verified |
+| Vitest | Running the automated tests | Installed with npm | Free |
 | Sample CSV and answer key | Test input | Checkpoint 1 | Free |
 
 ### Set 1: What I need from you
@@ -532,7 +538,7 @@ This checkpoint ends when you can connect Claude to the tool on your own compute
 
 ### What this checkpoint covers
 
-- The MCP server itself, built with the official Python SDK, with about 12 tools.
+- The MCP server itself, built with the official TypeScript SDK, with about 14 tools.
 - A saved workflow prompt ("Weekly review run") so the user does not have to word the request.
 - Testing with the official MCP debugging tool, then with Claude, then, if you have access, with ChatGPT.
 - A check that the AI picks the right tool for typical requests.
@@ -567,13 +573,15 @@ We do not rely on the server asking the user's AI for help mid-task (a feature c
 | delete\_my\_data | Removes the owner's data on request | Confirmation |
 | load\_demo\_data | Loads the sample reviews so a new user can try everything without their own file | Confirmation and counts |
 
+Serious reviews and legal threats get one holding draft marked restricted, approved by the owner one by one and never in bulk. Spam and injection attempts get no draft. Rows with no text and no rating are ignored, and rating-only reviews are kept and replied to.
+
 In version 1 there is deliberately no tool that posts a reply anywhere. That is a safety decision, and the optional auto-reply described in chapter 4 comes later.
 
 ### Set 2: What I build and how
 
 | Deliverable | How I build it |
 | --- | --- |
-| MCP server | Python and the official MCP SDK, version pinned. It runs locally first, then as a remote server in checkpoint 5 |
+| MCP server | TypeScript and the official MCP SDK, version pinned. It runs locally first, then as a remote server in checkpoint 5 |
 | Tool descriptions | Written for the AI, not for people: short, specific, with an example each |
 | Compact outputs | Batches of 20, summaries with IDs, never hundreds of raw reviews in one reply |
 | Next-step hints | Each tool result tells the AI what to do next and how many items remain, so it does not stop halfway |
@@ -599,7 +607,7 @@ In version 1 there is deliberately no tool that posts a reply anywhere. That is 
 
 | Resource | What for | Where from | Cost |
 | --- | --- | --- | --- |
-| Official MCP Python SDK | Building the server | The Model Context Protocol GitHub organisation and modelcontextprotocol.io | Free |
+| Official MCP TypeScript SDK | Building the server | The Model Context Protocol GitHub organisation and modelcontextprotocol.io | Free |
 | MCP Inspector | Testing tools without an AI | Official MCP tooling, same site | Free |
 | Claude account that accepts custom connectors | Real testing | Your account. One compatibility page says all plans can in Claude, which we will verify | Your existing plan |
 | ChatGPT with developer mode, optional | Second-client test | Paid ChatGPT plan | Paid, optional |
@@ -668,7 +676,7 @@ The details of your API key and subscription are deliberately left for a later c
 
 | Resource | What for | Where from | Cost |
 | --- | --- | --- | --- |
-| Hosting account | Running the server publicly | A host with a free tier, such as Render, Fly.io, Railway or Google Cloud Run. We compare current terms at this point | Free tier, to be verified |
+| Hosting account | Running the server publicly | Cloudflare Workers with D1 (chosen 22 Oct 2026). We re-check current free-tier terms at this point | Free tier, to be verified |
 | Persistent storage | Keeping the database | The host's disk, or a free hosted database | Free tier, to be verified |
 | Claude API key with prepaid credit | Mode B | Anthropic Developer Console. Separate from a Claude.ai subscription | Your choice of a small credit amount |
 | GitHub account | Storing the code safely | github.com | Free |
@@ -872,14 +880,14 @@ This is the complete list of what I produce and the method behind each item.
 | PRD and decision log | This document and the locked decisions | Written with you, updated as choices are made | 0 |
 | Sample review set | About 120 invented reviews for one fake business | Written in varied voices, seeded with your real examples | 1 |
 | Answer key and labelling guide | Correct themes for 60 reviews, with rules for labelling | Hand labelled, then compared with your independent labels | 1 |
-| CSV importer | Reads review files and cleans them | Python with flexible column matching and a preview step | 2 |
-| Database | Stores reviews, tags, drafts, profiles, fixes, usage | SQLite, a single file | 2 |
-| Analytics and digest data | Theme counts, trends, new themes, exact quotes | Plain Python code with sample-size rules | 2 |
-| Automated tests | Proof the code behaves on messy input | pytest | 2 onward |
+| CSV importer | Reads review files and cleans them | TypeScript with flexible column matching and a preview step | 2 |
+| Database | Stores reviews, tags, drafts, profiles, fixes, usage | SQLite locally, Cloudflare D1 when hosted | 2 |
+| Analytics and digest data | Theme counts, trends, new themes, exact quotes | Plain TypeScript code with sample-size rules | 2 |
+| Automated tests | Proof the code behaves on messy input | Vitest | 2 onward |
 | Tagging, escalation and reply prompts | The AI's instructions | Written, tested on the tuning set, scored on the sealed test set | 3 |
 | Safety checks | Format, quote and promise checks after the AI answers | Code that validates every AI result | 3 |
-| Evaluation script | Scores the AI against the answer key | Python | 3 |
-| MCP server | About 12 tools plus a weekly workflow prompt | Official Python MCP SDK, version pinned | 4 |
+| Evaluation script | Scores the AI against the answer key | TypeScript | 3 |
+| MCP server | About 12 tools plus a weekly workflow prompt | Official TypeScript MCP SDK, version pinned | 4 |
 | Tool-choice test | Checks the AI picks the right tool | 15 typical requests with expected tools | 4 |
 | Remote deployment | Public HTTPS server | Free hosting tier, secrets stored on the host | 5 |
 | Invites, owner separation and quotas | Controls who can use what | Owner-scoped code and per-owner counters | 5 |
@@ -895,14 +903,14 @@ Twelve decisions are open; for each one I have a default, so you can answer only
 
 | # | Decision | My default | Why it matters | Needed by |
 | --- | --- | --- | --- | --- |
-| 1 | Target market and languages | No fixed market. Pick a launch audience from chapter 3 instead | Sets the sample data, date format and reply language | Checkpoint 0 |
-| 2 | First business type | Cafes and restaurants | Decides the starter theme list and sample business | Checkpoint 0 |
-| 3 | Language of replies | Reply in the language of the review | Affects prompts and testing | Checkpoint 0 |
+| 1 | Target market and languages | **Decided:** English only for now. Launch audience from chapter 3, no fixed market | Sets the sample data, date format and reply language | Checkpoint 0 |
+| 2 | First business type | **Decided:** restaurants and food delivery apps | Decides the starter theme list and sample business | Checkpoint 0 |
+| 3 | Language of replies | **Decided:** English | Affects prompts and testing | Checkpoint 0 |
 | 4 | Free-tier limits per owner | 100 reviews analysed and 30 drafts in total, until we measure real cost | Controls your spending | Checkpoint 0, revised at 5 |
 | 5 | Which reviews get drafts by default | The most recent 30, plus any unanswered negative ones | Keeps cost and review time low | Checkpoint 2 |
 | 6 | Date format | Whatever is normal in your market | Prevents wrongly dated trends | Checkpoint 2 |
 | 7 | Fix tracking in version 1 | Included, in a basic form | It is the feature that keeps owners coming back | Checkpoint 0 |
-| 8 | Hosting provider | Chosen at checkpoint 5 after comparing current free tiers | Free terms change | Checkpoint 5 |
+| 8 | Hosting provider | **Decided (22 Oct 2026):** Cloudflare Workers + D1, TypeScript. Re-verify free-tier terms at checkpoint 5 | Free terms change | Checkpoint 5 |
 | 9 | Number of Mode B users | 5 to 10, by invite | Caps worst-case cost | Checkpoint 5 |
 | 10 | Pilot size and who | 3 to 5, mixing helpers, freelancers and owners | Quality of feedback | Checkpoint 4 |
 | 11 | Optional auto-reply | Opt-in setting built after version 1. Version 1 gets one-step approval of all safe drafts | Posting needs official platform access and adds public risk | Checkpoint 0 |

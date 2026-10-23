@@ -108,5 +108,5 @@ The live PRD artifact: https://claude.ai/artifact/BRswaYfJHpaokTkGZd8nmR (source
 - **Injection attempts and spam:** tagged Other, negative, no reply, never automatic.
 - **Serious reviews and legal threats:** one restricted holding draft, owner approval only, never bulk, 12-hour target shown in the digest.
 - **Repeated-phrase alerts:** not in v1.
-- **PRD changes to propose (not yet approved):** TypeScript stack, two new themes, English only, rating-only replies, restricted lane, spam handling.
+- **PRD updated (Revision 2, 23 Oct 2026) with Hari's approval:** TypeScript stack, two new themes, English only, rating-only replies, restricted lane, spam handling. The live Claude Docs PRD artifact has not been updated; `docs/PRD.md` is now the newer copy. Further PRD edits still need Hari's approval.
 - **Still to do:** Hari labels 30 reviews blind; checkpoint 2 core engine.
