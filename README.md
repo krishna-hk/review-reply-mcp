@@ -138,3 +138,13 @@ Drafts are suggestions. The owner is responsible for anything they post. This pr
 ## License
 
 To be decided before the first public release.
+
+## Try the core engine (checkpoint 2)
+
+Needs Node.js 22 or newer. The engine has no AI and no server yet.
+
+```bash
+npm install
+npm test          # automatic tests
+npm run demo      # imports the sample CSV and prints the digest numbers
+```
