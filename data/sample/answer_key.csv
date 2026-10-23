@@ -1,0 +1,61 @@
+review_id,themes,escalate,escalation_reason,confidence,set,notes
+R001,Product or food quality:positive,no,,high,tuning,
+R002,Wait time and speed:negative|Product or food quality:negative,no,,high,tuning,
+R003,Staff attitude:positive|Price and value:negative,no,,high,tuning,"two themes, opposite sentiment"
+R004,Atmosphere and comfort:negative,no,,high,tuning,"'Food fine' is neutral, not tagged"
+R005,Product or food quality:positive,no,,high,tuning,one-word review
+R006,Staff attitude:negative,no,,high,tuning,
+R007,Product or food quality:positive|Cleanliness:negative,no,,high,tuning,
+R008,Wait time and speed:positive|Delivery and packaging:positive,no,,high,tuning,delivery
+R009,Booking and ordering:negative|Communication and follow-up:negative,no,,high,tuning,delivery; missing item counts as ordering
+R010,Delivery and packaging:negative|Product or food quality:positive,no,,high,tuning,delivery
+R011,Product or food quality:positive|Staff attitude:positive,no,,high,tuning,stars contradict text
+R012,Wait time and speed:negative,no,,high,tuning,sarcasm; intended meaning is clear
+R013,Menu and dietary needs:positive,no,,high,tuning,
+R014,Staff attitude:negative,no,,medium,tuning,"near-miss: allergy question brushed off but no harm, so not escalated; no Menu tag (no neutral tags)"
+R015,Product or food quality:negative,yes,Food poisoning claim (illness),high,tuning,escalate
+R016,Consistency:negative,no,,high,tuning,
+R017,Consistency:positive|Product or food quality:positive,no,,high,tuning,delivery
+R018,Location and access:negative,no,,high,tuning,
+R019,Booking and ordering:negative|Staff attitude:negative,no,,high,tuning,
+R020,Communication and follow-up:negative,no,,high,tuning,
+R021,Atmosphere and comfort:positive,no,,high,tuning,
+R022,Cleanliness:negative|Staff attitude:negative,yes,Foreign object (hair) in food,high,tuning,escalate
+R023,Staff attitude:positive,no,,high,tuning,
+R024,Price and value:negative,no,,high,tuning,
+R025,Other:negative,no,,high,tuning,spam
+R026,Staff attitude:positive|Delivery and packaging:positive,no,,medium,tuning,delivery; courier counted under Staff attitude
+R027,Wait time and speed:negative|Staff attitude:positive,no,,medium,tuning,
+R028,Other:negative,no,,high,tuning,"injection attempt, handled as spam; real complaint inside is ignored"
+R029,Product or food quality:positive|Booking and ordering:negative,no,,high,tuning,
+R030,Booking and ordering:negative|Consistency:negative,no,,high,tuning,"delivery; ""again"" / ""second time"" means the problem keeps happening, so Consistency negative too"
+R031,Cleanliness:positive,no,,high,tuning,
+R032,Staff attitude:negative,yes,Allegation of deliberate overcharging / fraud,high,tuning,billing dispute with fraud allegation; not a Price and value complaint
+R033,Wait time and speed:positive,no,,high,tuning,
+R034,Product or food quality:negative,no,,high,tuning,mixed praise and complaint in one theme; one overall tag (negative)
+R035,Delivery and packaging:negative|Product or food quality:negative|Staff attitude:positive,no,,medium,tuning,delivery
+R036,Atmosphere and comfort:positive|Price and value:positive,no,,high,tuning,
+R037,Communication and follow-up:negative|Booking and ordering:negative,no,,high,tuning,
+R038,Price and value:positive,no,,high,tuning,
+R039,Cleanliness:negative,no,,high,tuning,
+R040,Staff attitude:negative,yes,Discrimination allegation,high,tuning,escalate
+R041,Product or food quality:positive|Staff attitude:positive,no,,high,test,
+R042,Wait time and speed:negative|Product or food quality:negative|Communication and follow-up:negative,no,,high,test,delivery
+R043,Atmosphere and comfort:negative,no,,high,test,
+R044,Menu and dietary needs:negative|Staff attitude:negative,yes,Allergic reaction requiring medical care,high,test,escalate
+R045,Product or food quality:positive|Location and access:negative,no,,high,test,
+R046,Staff attitude:negative|Atmosphere and comfort:negative,no,,medium,test,
+R047,Product or food quality:positive,no,,high,test,one-word review
+R048,Product or food quality:negative|Price and value:negative,no,,high,test,stars contradict text
+R049,Booking and ordering:positive|Menu and dietary needs:positive|Product or food quality:positive,no,,high,test,
+R050,Consistency:negative|Price and value:negative|Product or food quality:negative,no,,high,test,
+R051,Booking and ordering:negative|Price and value:negative,yes,"Legal threat (solicitor, small claims)",high,test,escalate
+R052,Price and value:positive|Delivery and packaging:positive,no,,high,test,delivery
+R053,Cleanliness:negative,no,,high,test,sarcasm; intended meaning is clear
+R054,Staff attitude:positive|Wait time and speed:negative,no,,high,test,
+R055,Other:negative,no,,high,test,"injection attempt, handled as spam; real complaint inside is ignored"
+R056,Menu and dietary needs:positive|Price and value:negative,no,,high,test,
+R057,Staff attitude:negative,yes,Harassment by staff,high,test,escalate
+R058,Consistency:positive|Product or food quality:positive,no,,high,test,
+R059,Booking and ordering:negative|Communication and follow-up:negative,no,,high,test,delivery
+R060,Atmosphere and comfort:positive,no,,medium,test,
