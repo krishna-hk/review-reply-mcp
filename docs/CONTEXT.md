@@ -97,3 +97,16 @@ The live PRD artifact: https://claude.ai/artifact/BRswaYfJHpaokTkGZd8nmR (source
 - Label all pricing and limit claims "verify at deploy time".
 - Commit small and often, push every commit once the remote exists.
 - Plain, non-jargon explanations for Hari; he is not a developer by background (product roles target).
+
+## 12. Decisions made after the planning chat (Claude Code, 22 to 23 Oct 2026)
+
+- **Hosting:** Cloudflare Workers + D1 (TypeScript). This replaces the PRD's Python choice; PRD edit still awaiting Hari's approval. Repo: https://github.com/krishna-hk/review-reply-mcp
+- **Sample data:** invented restaurant, English only, includes delivery-app reviews. 120 reviews in `data/sample/reviews.csv`; answer key for R001 to R060 in `data/sample/answer_key.csv` (R001 to R040 tuning, R041 to R060 sealed test). A Kaggle restaurant dataset was used locally only as a style reference and is not in the repo.
+- **Themes:** the 10 starter themes plus Menu and dietary needs and Delivery and packaging, plus Other. Five umbrella groups for analytics (see `docs/ANALYTICS_AND_ESCALATION.md`).
+- **Tagging rules:** one sentiment per theme per review, positive or negative only, no neutral; see `docs/LABELLING_GUIDE.md`.
+- **Rating-only reviews** are kept and replied to; rows with no rating and no text are ignored.
+- **Injection attempts and spam:** tagged Other, negative, no reply, never automatic.
+- **Serious reviews and legal threats:** one restricted holding draft, owner approval only, never bulk, 12-hour target shown in the digest.
+- **Repeated-phrase alerts:** not in v1.
+- **PRD changes to propose (not yet approved):** TypeScript stack, two new themes, English only, rating-only replies, restricted lane, spam handling.
+- **Still to do:** Hari labels 30 reviews blind; checkpoint 2 core engine.
