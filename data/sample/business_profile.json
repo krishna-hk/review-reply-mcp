@@ -1,0 +1,14 @@
+{
+  "business_name": "Saffron & Salt",
+  "business_type": "restaurant with delivery",
+  "tone": "warm, short, plain English, no emojis",
+  "signature": "The Saffron & Salt team",
+  "contact": "hello@saffronandsalt.example",
+  "policies": [
+    "Invite unhappy customers to email us instead of discussing details in public",
+    "Never promise refunds, discounts or free items in a public reply",
+    "Do not name individual staff members in a reply"
+  ],
+  "never_say": ["voucher", "compensation", "full refund", "free meal", "our fault", "lawsuit"],
+  "languages": ["en"]
+}
