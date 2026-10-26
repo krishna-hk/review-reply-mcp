@@ -109,6 +109,17 @@ describe("the whole flow with demo data", () => {
     expect(approved.action_results[0].done).toContain("nothing is posted automatically");
   });
 
+  it("warns, without rejecting, when a low-star reply has no invitation to contact the owner", async () => {
+    const { call } = await setup();
+    await call("load_demo_data");
+    await tagEverything(call);
+    const s = await call("save_draft", { review_id: "demo_R002", draft_text: "We are sorry about the wait. The Saffron & Salt team" });
+    expect(s.saved).toBe(true);
+    expect(s.warnings[0]).toContain("hello@saffronandsalt.example");
+    const t = await call("save_draft", { review_id: "demo_R002", draft_text: "We are sorry about the wait. Please email hello@saffronandsalt.example. The Saffron & Salt team" });
+    expect(t.warnings).toBeUndefined();
+  });
+
   it("never writes a reply for spam and says why", async () => {
     const { call } = await setup();
     await call("load_demo_data");

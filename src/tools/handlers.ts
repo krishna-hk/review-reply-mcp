@@ -249,9 +249,13 @@ export function saveDraft(ctx: Ctx, a: { review_id: string; draft_text: string }
   const c = checkDraft({ draft: a.draft_text, lane, reviewText: review.text, neverSay: profile.never_say, allowedContacts: profile.contact ? [profile.contact] : [] });
   if (!c.ok) return { saved: false, rejected_because: c.problems, next_step: "Rewrite the draft so it breaks none of these rules, then call save_draft again." };
   ctx.store.saveDraft(review.review_id, a.draft_text.trim(), lane === "restricted");
+  const warnings: string[] = [];
+  if (lane === "normal" && review.rating !== null && review.rating <= 3 && profile.contact && !a.draft_text.includes(profile.contact))
+    warnings.push(`This is a ${review.rating} star review and the draft does not invite the customer to contact ${profile.contact}. Consider adding that, as the policies ask.`);
   return {
     saved: true,
     lane,
+    ...(warnings.length ? { warnings } : {}),
     status: "pending",
     ...(lane === "restricted" ? { note: "Restricted: only the owner can approve this, one at a time. It is never part of a bulk approval." } : {}),
     drafts_still_to_write: ctx.store.needingDraft(500).length,
