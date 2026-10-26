@@ -1,0 +1,21 @@
+review_id,themes,escalate,escalation_reason,confidence,set,notes
+R121,Product or food quality:positive|Staff attitude:positive,no,,high,test,
+R122,Wait time and speed:negative|Product or food quality:negative|Delivery and packaging:negative,no,,high,test,
+R123,Booking and ordering:negative|Delivery and packaging:negative,no,,high,test,"delivery; never arrived (rule 22), rider blamed"
+R124,Menu and dietary needs:positive|Product or food quality:positive|Atmosphere and comfort:negative,no,,high,test,
+R125,Staff attitude:positive|Cleanliness:negative|Wait time and speed:negative,no,,high,test,
+R126,Cleanliness:negative|Staff attitude:negative,yes,Foreign object (plastic) in food,high,test,escalate
+R127,Booking and ordering:positive|Wait time and speed:positive,no,,high,test,
+R128,Price and value:negative|Product or food quality:negative,no,,high,test,
+R129,Delivery and packaging:positive|Product or food quality:positive|Wait time and speed:positive,no,,high,test,delivery; hot food (rule 23)
+R130,Menu and dietary needs:negative|Staff attitude:negative,yes,Illness after a dietary failure,high,test,escalate
+R131,Other:negative,no,,high,test,"injection attempt, handled as spam"
+R132,Wait time and speed:negative,no,,high,test,rushed counts as speed (rule 18)
+R133,Atmosphere and comfort:positive|Staff attitude:positive,no,,high,test,
+R134,Booking and ordering:negative|Consistency:negative,no,,high,test,delivery; repeated problem (rule 9)
+R135,Booking and ordering:negative|Communication and follow-up:negative,yes,Legal threat (small claims),high,test,escalate; deposit is not Price and value (rule 25)
+R136,Product or food quality:positive|Price and value:positive|Location and access:negative,no,,high,test,
+R137,Cleanliness:positive|Product or food quality:negative,no,,high,test,
+R138,Consistency:negative|Wait time and speed:negative|Product or food quality:negative|Staff attitude:negative,no,,high,test,repeated problem (rule 9)
+R139,Delivery and packaging:positive|Product or food quality:positive,no,,high,test,delivery; courier under Delivery and packaging (rule 12)
+R140,Staff attitude:negative|Atmosphere and comfort:negative,no,,high,test,rule 26

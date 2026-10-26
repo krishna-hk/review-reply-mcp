@@ -27,6 +27,11 @@ Sample business: **an invented restaurant** (not a real place). All reviews are 
 19. **Praise of "service"** that is about how people behaved ("great service") is Staff attitude positive.
 20. **Hair, insects and foreign objects in food** are Cleanliness negative, and serious when they are in the food itself. Taste and cooking problems are Product or food quality.
 21. **Delivery orders that arrive cold, soggy or damaged** are Product or food quality negative and Delivery and packaging negative. A kind rider in the same review does not cancel the Delivery and packaging negative; one overall sentiment per theme.
+22. **An order that never arrives, or arrives with items missing,** is Booking and ordering negative. Add Delivery and packaging negative only if the review blames the rider, the handover or the packaging ("marked delivered but not at my door", "rider not answering").
+23. **Hot or warm food on a delivery order** is Product or food quality positive and Delivery and packaging positive; cold or soggy is both negative (rule 21 is the negative side of this).
+24. **Allergy and dietary failures** (a dish with an ingredient the customer said to avoid, ignored dietary requests) are Menu and dietary needs negative. Add Staff attitude negative if the customer says staff were told and ignored it. A wrong dish that is only a mix-up, with no dietary issue, is Booking and ordering.
+25. **Money disputes are not Price and value.** A double charge, a deposit or refund not returned, or a refused refund is tagged by what went wrong: Booking and ordering for a cancelled booking, Communication and follow-up if nobody replied, Staff attitude if staff were dismissive. Fraud and legal threats are flagged separately. Price and value is only about cost compared with what the customer got.
+26. **Behaviour in front of customers that spoils the visit** ("ruined our night", "ruined our meal") is Staff attitude negative and Atmosphere and comfort negative (extends rule 15).
 
 ## Themes (restaurant)
 

@@ -40,7 +40,7 @@ R038,Price and value:positive,no,,high,tuning,
 R039,Cleanliness:negative,no,,high,tuning,
 R040,Staff attitude:negative,yes,Discrimination allegation,high,tuning,escalate
 R041,Product or food quality:positive|Staff attitude:positive,no,,high,test,
-R042,Wait time and speed:negative|Product or food quality:negative|Communication and follow-up:negative,no,,high,test,delivery
+R042,Wait time and speed:negative|Product or food quality:negative|Communication and follow-up:negative|Delivery and packaging:negative,no,,high,test,delivery; cold on arrival is also Delivery and packaging (guide rules 21 and 23); synced after the sealed run
 R043,Atmosphere and comfort:negative,no,,high,test,
 R044,Menu and dietary needs:negative|Staff attitude:negative,yes,Allergic reaction requiring medical care,high,test,escalate
 R045,Product or food quality:positive|Location and access:negative,no,,high,test,
@@ -49,7 +49,7 @@ R047,Product or food quality:positive,no,,high,test,one-word review
 R048,Product or food quality:negative|Price and value:negative,no,,high,test,stars contradict text
 R049,Booking and ordering:positive|Menu and dietary needs:positive|Product or food quality:positive,no,,high,test,
 R050,Consistency:negative|Price and value:negative|Product or food quality:negative,no,,high,test,
-R051,Booking and ordering:negative|Price and value:negative,yes,"Legal threat (solicitor, small claims)",high,test,escalate
+R051,Booking and ordering:negative,yes,"Legal threat (solicitor, small claims)",high,test,money disputes are not Price and value (guide rule 25); synced after the sealed run
 R052,Price and value:positive|Delivery and packaging:positive|Product or food quality:positive,no,,high,test,"""arrived hot"" is food temperature (guide rule 18)"
 R053,Cleanliness:negative,no,,high,test,sarcasm; intended meaning is clear
 R054,Staff attitude:positive|Wait time and speed:negative,no,,high,test,
