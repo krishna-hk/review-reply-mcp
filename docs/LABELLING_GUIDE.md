@@ -23,6 +23,7 @@ Sample business: **an invented restaurant** (not a real place). All reviews are 
 15. **Unprofessional behaviour in front of customers** (staff arguing, shouting at each other) is Staff attitude negative.
 16. **"Called twice" is not Communication** unless the review says nobody answered or replied.
 17. **Spam is automatically Other negative.** When labelling by hand you only tick the Spam column; no theme tag is needed.
+18. **Temperature and pace.** Food that is hot, warm, cold or lukewarm is Product or food quality, even when it arrived by delivery (also tag Delivery and packaging if the review is about the journey or packaging). "Rushed" or "hurried" service counts under Wait time and speed, because it is about the speed of service.
 
 ## Themes (restaurant)
 
