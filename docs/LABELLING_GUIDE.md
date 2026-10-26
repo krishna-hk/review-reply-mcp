@@ -24,6 +24,9 @@ Sample business: **an invented restaurant** (not a real place). All reviews are 
 16. **"Called twice" is not Communication** unless the review says nobody answered or replied.
 17. **Spam is automatically Other negative.** When labelling by hand you only tick the Spam column; no theme tag is needed.
 18. **Temperature and pace.** Food that is hot, warm, cold or lukewarm is Product or food quality, even when it arrived by delivery (also tag Delivery and packaging if the review is about the journey or packaging). "Rushed" or "hurried" service counts under Wait time and speed, because it is about the speed of service.
+19. **Praise of "service"** that is about how people behaved ("great service") is Staff attitude positive.
+20. **Hair, insects and foreign objects in food** are Cleanliness negative, and serious when they are in the food itself. Taste and cooking problems are Product or food quality.
+21. **Delivery orders that arrive cold, soggy or damaged** are Product or food quality negative and Delivery and packaging negative. A kind rider in the same review does not cancel the Delivery and packaging negative; one overall sentiment per theme.
 
 ## Themes (restaurant)
 
