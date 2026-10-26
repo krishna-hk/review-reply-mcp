@@ -74,6 +74,8 @@ describe("the whole flow with demo data", () => {
     await tagEverything(call);
     const digest = await call("get_digest");
     expect(digest.reviews_not_yet_tagged).toBe(0);
+    expect(digest.total_reviews).toBe(38);
+    expect(digest.period.note).toContain("covers all");
     expect(digest.serious_reviews_waiting_for_owner).toHaveLength(4);
     expect(digest.spam_ignored).toBe(2);
     expect(digest.top_criticised.length).toBeGreaterThan(0);

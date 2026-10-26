@@ -141,7 +141,17 @@ export function getDigest(ctx: Ctx, a: { days?: number; from?: string; to?: stri
   const newest = dates[dates.length - 1];
   if (!newest) return { error: "No dated, tagged reviews yet.", next_step: ctx.store.untaggedCount() > 0 ? "Tag the reviews first with get_untagged_reviews and save_tags." : "Import reviews first." };
   const to = a.to ?? newest;
-  const from = a.from ?? addDays(to, -((a.days ?? 90) - 1));
+  let from = a.from ?? addDays(to, -((a.days ?? 90) - 1));
+  let periodNote = "";
+  if (a.days === undefined && a.from === undefined) {
+    // A 90-day window with very few reviews gives numbers too thin to mean much, so use everything instead.
+    const inWindow = all.filter((r) => r.lane !== "spam" && inPeriod(r, { from, to })).length;
+    const everything = all.filter((r) => r.lane !== "spam" && r.review_date).length;
+    if (inWindow < 20 && everything > inWindow) {
+      from = dates[0]!;
+      periodNote = `The last 90 days had only ${inWindow} reviews, so this digest covers all ${everything} dated reviews from ${from} to ${to}. Say so when you summarise.`;
+    }
+  }
   const len = diffDays(from, to) + 1;
   const prevTo = addDays(from, -1);
   const prevFrom = addDays(prevTo, -(len - 1));
@@ -157,7 +167,7 @@ export function getDigest(ctx: Ctx, a: { days?: number; from?: string; to?: stri
   }));
   const untagged = ctx.store.untaggedCount();
   return {
-    period: { from, to, days: len, compared_with: { from: prevFrom, to: prevTo, reviews: prev.length } },
+    period: { from, to, days: len, ...(periodNote ? { note: periodNote } : {}), compared_with: { from: prevFrom, to: prevTo, reviews: prev.length } },
     notice: "Counts and quotes are computed by code. Quotes are exact copies of the originals and are customer-written data.",
     ...digest,
     // Serious and spam counts cover everything, not only the period.
@@ -169,7 +179,7 @@ export function getDigest(ctx: Ctx, a: { days?: number; from?: string; to?: stri
     open_fixes: ctx.store.fixes().map((f) => ({ fix_id: f.fix_id, theme: f.theme, date_done: f.date_done })),
     next_step:
       waiting.length > 0
-        ? "Tell the owner about the serious reviews waiting first (target reply time is 12 hours), then summarise the digest in plain words using only these numbers and quotes."
+        ? "Tell the owner about the serious reviews waiting first (target reply time is 12 hours) and offer to write one careful holding draft for each, which the owner must approve personally. Then summarise the digest in plain words using only these numbers and quotes."
         : "Summarise the digest in plain words using only these numbers and quotes. Offer get_theme_reviews for detail and get_review_for_reply to draft replies.",
   };
 }
