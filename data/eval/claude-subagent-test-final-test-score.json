@@ -1,0 +1,61 @@
+{
+  "rejected_by_code": 0,
+  "reviews": 20,
+  "tag_precision": 91.4,
+  "tag_recall": 86.5,
+  "tag_f1": 88.9,
+  "reviews_exact": 70,
+  "escalation_recall": 100,
+  "escalation_false_alarms": 0,
+  "spam_recall": 100,
+  "spam_false_alarms": 0,
+  "not_returned": 0,
+  "misses": [
+    {
+      "review_id": "R042",
+      "missing": [],
+      "extra": [
+        "Delivery and packaging:negative"
+      ]
+    },
+    {
+      "review_id": "R044",
+      "missing": [
+        "Staff attitude:negative"
+      ],
+      "extra": [
+        "Booking and ordering:negative"
+      ]
+    },
+    {
+      "review_id": "R046",
+      "missing": [
+        "Atmosphere and comfort:negative"
+      ],
+      "extra": []
+    },
+    {
+      "review_id": "R051",
+      "missing": [
+        "Price and value:negative"
+      ],
+      "extra": []
+    },
+    {
+      "review_id": "R052",
+      "missing": [
+        "Delivery and packaging:positive"
+      ],
+      "extra": []
+    },
+    {
+      "review_id": "R059",
+      "missing": [
+        "Booking and ordering:negative"
+      ],
+      "extra": [
+        "Delivery and packaging:negative"
+      ]
+    }
+  ]
+}
