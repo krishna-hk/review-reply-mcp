@@ -1,0 +1,29 @@
+{
+  "rejected_by_code": 0,
+  "reviews": 40,
+  "tag_precision": 96.7,
+  "tag_recall": 100,
+  "tag_f1": 98.3,
+  "reviews_exact": 95,
+  "escalation_recall": 100,
+  "escalation_false_alarms": 0,
+  "spam_recall": 100,
+  "spam_false_alarms": 0,
+  "not_returned": 0,
+  "misses": [
+    {
+      "review_id": "R031",
+      "missing": [],
+      "extra": [
+        "Atmosphere and comfort:positive"
+      ]
+    },
+    {
+      "review_id": "R032",
+      "missing": [],
+      "extra": [
+        "Price and value:negative"
+      ]
+    }
+  ]
+}

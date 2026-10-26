@@ -1,0 +1,54 @@
+{
+  "rejected_by_code": 0,
+  "reviews": 40,
+  "tag_precision": 93.3,
+  "tag_recall": 94.9,
+  "tag_f1": 94.1,
+  "reviews_exact": 87.5,
+  "escalation_recall": 100,
+  "escalation_false_alarms": 0,
+  "spam_recall": 100,
+  "spam_false_alarms": 0,
+  "not_returned": 0,
+  "misses": [
+    {
+      "review_id": "R011",
+      "missing": [
+        "Staff attitude:positive"
+      ],
+      "extra": []
+    },
+    {
+      "review_id": "R022",
+      "missing": [
+        "Cleanliness:negative"
+      ],
+      "extra": [
+        "Product or food quality:negative"
+      ]
+    },
+    {
+      "review_id": "R031",
+      "missing": [],
+      "extra": [
+        "Atmosphere and comfort:positive"
+      ]
+    },
+    {
+      "review_id": "R035",
+      "missing": [
+        "Delivery and packaging:negative"
+      ],
+      "extra": [
+        "Delivery and packaging:positive"
+      ]
+    },
+    {
+      "review_id": "R040",
+      "missing": [],
+      "extra": [
+        "Atmosphere and comfort:negative"
+      ]
+    }
+  ]
+}
