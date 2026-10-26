@@ -1,12 +1,13 @@
 import { groupOf, type Sentiment, type Theme, UMBRELLA_GROUPS } from "./themes.js";
-import { isExactQuote, pickQuote } from "./quotes.js";
+import { isExactQuote, pickQuote, quoteFromSentence } from "./quotes.js";
 
 export interface TaggedReview {
   review_id: string;
   rating: number | null;
   text: string;
   review_date: string | null;
-  tags: { theme: Theme; sentiment: Sentiment }[];
+  /** evidence: which sentence (counting from 0) backs the tag; code copies it exactly. */
+  tags: { theme: Theme; sentiment: Sentiment; evidence?: number }[];
   lane?: "normal" | "restricted" | "spam";
 }
 
@@ -42,7 +43,7 @@ export function countByGroup(reviews: TaggedReview[]): Record<string, Counts> {
   return out;
 }
 
-export type Direction = "rising" | "falling" | "steady" | "not enough data";
+export type Direction = "rising" | "falling" | "steady" | "not enough data" | "no earlier period to compare";
 
 /** Compares negative mentions of one theme between two periods. */
 export function trend(current: number, previous: number): Direction {
@@ -66,6 +67,8 @@ export function inPeriod(r: { review_date: string | null }, p: Period): boolean 
 export interface DigestTheme {
   theme: Theme;
   mentions: number;
+  /** Whole percent of the reviews in the digest that mention this theme this way. */
+  percent_of_reviews: number;
   quotes: { review_id: string; quote: string }[];
   trend: Direction;
 }
@@ -92,11 +95,20 @@ function topThemes(reviews: TaggedReview[], previous: TaggedReview[], sentiment:
       const quotes: DigestTheme["quotes"] = [];
       for (const r of reviews) {
         if (quotes.length >= 2) break;
-        if (r.lane === "spam" || !r.tags.some((t) => t.theme === theme && t.sentiment === sentiment)) continue;
-        const quote = pickQuote(r.text);
+        // Serious reviews are shown in the owner's "waiting" list, never as casual quotes.
+        if (r.lane === "spam" || r.lane === "restricted") continue;
+        const tag = r.tags.find((t) => t.theme === theme && t.sentiment === sentiment);
+        if (!tag) continue;
+        const quote = (tag.evidence !== undefined ? quoteFromSentence(r.text, tag.evidence) : null) ?? pickQuote(r.text);
         if (quote && isExactQuote(r.text, quote)) quotes.push({ review_id: r.review_id, quote });
       }
-      return { theme, mentions: c[sentiment], quotes, trend: previous.length === 0 ? "not enough data" : trend(c[sentiment], before.get(theme)?.[sentiment] ?? 0) };
+      return {
+        theme,
+        mentions: c[sentiment],
+        percent_of_reviews: Math.round((c[sentiment] / Math.max(1, reviews.length)) * 100),
+        quotes,
+        trend: previous.length === 0 ? "no earlier period to compare" : trend(c[sentiment], before.get(theme)?.[sentiment] ?? 0),
+      };
     });
 }
 
