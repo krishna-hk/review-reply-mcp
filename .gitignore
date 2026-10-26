@@ -27,3 +27,6 @@ build/
 .idea/
 .vscode/
 *.log
+
+# Eval cache
+data/eval/.cache/
