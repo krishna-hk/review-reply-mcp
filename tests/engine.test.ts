@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { parseCsv } from "../src/engine/csv.js";
 import { buildDigest, countByGroup, countByTheme, trend, type TaggedReview } from "../src/engine/analytics.js";
-import { isExactQuote, pickQuote, splitSentences } from "../src/engine/quotes.js";
+import { isExactQuote, pickQuote, quoteFromSentence, splitSentences } from "../src/engine/quotes.js";
 import { canBulkApprove, checkDraft, hoursWaiting, isOverdue, laneFor } from "../src/engine/safety.js";
 import { isTheme, THEMES, UMBRELLA_GROUPS, groupOf } from "../src/engine/themes.js";
 import { importReviews } from "../src/engine/importer.js";
@@ -67,6 +67,27 @@ describe("quotes", () => {
     expect(n).toBeGreaterThan(10);
   });
 
+  it("never shows a serious or spam review as a casual quote", () => {
+    const d = buildDigest(tagged(), [], 13);
+    const shown = new Set([...d.top_praised, ...d.top_criticised].flatMap((t) => t.quotes.map((q) => q.review_id)));
+    for (const id of ["R015", "R022", "R032", "R040", "R044", "R051", "R057", "R025", "R028", "R055"]) expect(shown.has(id)).toBe(false);
+  });
+
+  it("copies the exact sentence the AI points to, and ignores a bad pointer", () => {
+    const text = "Lovely staff, Maya especially. Bit pricey for the portion sizes though.";
+    expect(quoteFromSentence(text, 0)).toBe("Lovely staff, Maya especially.");
+    expect(quoteFromSentence(text, 1)).toBe("Bit pricey for the portion sizes though.");
+    expect(quoteFromSentence(text, 5)).toBeNull();
+    const digest = buildDigest([{ review_id: "x", rating: 4, text, review_date: "2026-01-01", tags: [{ theme: "Staff attitude", sentiment: "positive", evidence: 0 }, { theme: "Price and value", sentiment: "negative", evidence: 1 }] }]);
+    expect(digest.top_praised[0]!.quotes[0]!.quote).toBe("Lovely staff, Maya especially.");
+    expect(digest.top_criticised[0]!.quotes[0]!.quote).toBe("Bit pricey for the portion sizes though.");
+  });
+
+  it("shows each theme as a share of the reviews", () => {
+    const d = buildDigest(tagged());
+    for (const t of [...d.top_praised, ...d.top_criticised]) expect(t.percent_of_reviews).toBe(Math.round((t.mentions / d.total_reviews) * 100));
+  });
+
   it("prefers a whole sentence for long reviews and refuses retyped text", () => {
     const long = "First sentence is here. " + "x".repeat(200) + ". Short one.";
     expect(pickQuote(long, 60)).toBe("First sentence is here.");
@@ -103,7 +124,7 @@ describe("counts and digest from the answer key", () => {
 
   it("reports no trend when there is no earlier period to compare with", () => {
     const d = buildDigest(tagged());
-    expect([...d.top_praised, ...d.top_criticised].every((t) => t.trend === "not enough data")).toBe(true);
+    expect([...d.top_praised, ...d.top_criticised].every((t) => t.trend === "no earlier period to compare")).toBe(true);
   });
 
   it("does not call a trend on a tiny sample", () => {

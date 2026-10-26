@@ -35,7 +35,7 @@ for (const [g, c] of Object.entries(d.groups)) console.log(`    ${g}: ${c.positi
 for (const [label, list] of [["Top praised", d.top_praised], ["Top criticised", d.top_criticised]] as const) {
   console.log(`  ${label}:`);
   for (const t of list) {
-    console.log(`    ${t.theme} (${t.mentions}, ${t.trend})`);
+    console.log(`    ${t.theme}: ${t.mentions} of ${d.total_reviews} reviews (${t.percent_of_reviews}%), ${t.trend}`);
     for (const q of t.quotes) console.log(`      "${q.quote}" (${q.review_id})`);
   }
 }
