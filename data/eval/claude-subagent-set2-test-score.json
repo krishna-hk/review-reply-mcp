@@ -1,0 +1,36 @@
+{
+  "rejected_by_code": 0,
+  "reviews": 20,
+  "tag_precision": 93.6,
+  "tag_recall": 100,
+  "tag_f1": 96.7,
+  "reviews_exact": 85,
+  "escalation_recall": 100,
+  "escalation_false_alarms": 0,
+  "spam_recall": 100,
+  "spam_false_alarms": 0,
+  "not_returned": 0,
+  "misses": [
+    {
+      "review_id": "R121",
+      "missing": [],
+      "extra": [
+        "Atmosphere and comfort:positive"
+      ]
+    },
+    {
+      "review_id": "R123",
+      "missing": [],
+      "extra": [
+        "Communication and follow-up:negative"
+      ]
+    },
+    {
+      "review_id": "R127",
+      "missing": [],
+      "extra": [
+        "Communication and follow-up:positive"
+      ]
+    }
+  ]
+}
