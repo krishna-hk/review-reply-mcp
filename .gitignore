@@ -30,3 +30,4 @@ build/
 
 # Eval cache
 data/eval/.cache/
+.dev.vars
