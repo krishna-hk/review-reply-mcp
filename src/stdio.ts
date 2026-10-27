@@ -9,7 +9,7 @@ import { Store } from "./store/store.js";
 const dbPath = resolve(process.env.REVIEW_REPLY_DB ?? "data/private/local.sqlite");
 mkdirSync(dirname(dbPath), { recursive: true });
 const db = openDb(dbPath);
-const store = new Store(db, "local");
+const store = await new Store(db, "local").init();
 const server = createServer({
   store,
   now: () => new Date().toISOString(),

@@ -30,7 +30,7 @@ function tagResultFor(demoId: string) {
 
 let clock = "2026-10-27T08:00:00.000Z";
 async function setup(owner = "owner1", db = openDb(":memory:")) {
-  const store = new Store(db, owner, () => clock);
+  const store = await new Store(db, owner, () => clock).init();
   const server = createServer({ store, now: () => clock, maxRowsPerImport: 200, maxReviewsPerOwner: 2000 });
   const [a, b] = InMemoryTransport.createLinkedPair();
   const client = new Client({ name: "test", version: "0" });
@@ -158,7 +158,7 @@ describe("imports", () => {
 
   it("enforces the per-import row limit", async () => {
     const db = openDb(":memory:");
-    const store = new Store(db, "o", () => clock);
+    const store = await new Store(db, "o", () => clock).init();
     const server = createServer({ store, now: () => clock, maxRowsPerImport: 2, maxReviewsPerOwner: 2000 });
     const [a, b] = InMemoryTransport.createLinkedPair();
     const client = new Client({ name: "t", version: "0" });
@@ -200,10 +200,10 @@ describe("owner isolation and deletion", () => {
     await call("load_demo_data");
     const dry = await call("delete_my_data");
     expect(dry).toMatchObject({ deleted: false, would_delete: { reviews: 40 } });
-    expect(store.reviewCount()).toBe(40);
+    expect(await store.reviewCount()).toBe(40);
     const real = await call("delete_my_data", { confirm: true });
     expect(real.deleted).toBe(true);
-    expect(store.summaryCounts()).toEqual({ reviews: 0, tags: 0, flags: 0, drafts: 0, fixes: 0, profile: 0 });
+    expect(await store.summaryCounts()).toEqual({ reviews: 0, tags: 0, flags: 0, drafts: 0, fixes: 0, profile: 0 });
   });
 
   it("demo data will not mix with real reviews unless asked to replace", async () => {

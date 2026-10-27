@@ -28,9 +28,9 @@ export function createServer(ctx: Ctx): McpServer {
       contact: z.string().optional().describe("The only email, phone or link replies may contain"),
       policies: z.array(z.string()).optional(), never_say: z.array(z.string()).optional(), languages: z.array(z.string()).optional(),
     },
-  }, async (a) => asContent(h.setBusinessProfile(ctx, a)));
+  }, async (a) => asContent(await h.setBusinessProfile(ctx, a)));
 
-  server.registerTool("get_business_profile", { title: "Read business profile", description: "Read the saved business profile (tone, policies, sign-off). Use at the start of a session and before drafting replies.", inputSchema: {}, annotations: ro }, async () => asContent(h.getBusinessProfile(ctx)));
+  server.registerTool("get_business_profile", { title: "Read business profile", description: "Read the saved business profile (tone, policies, sign-off). Use at the start of a session and before drafting replies.", inputSchema: {}, annotations: ro }, async () => asContent(await h.getBusinessProfile(ctx)));
 
   server.registerTool("import_reviews", {
     title: "Import reviews from CSV",
@@ -47,7 +47,7 @@ export function createServer(ctx: Ctx): McpServer {
     title: "Get reviews to tag",
     description: "Get the next batch (up to 20) of imported reviews that have not been tagged, with the tagging instructions. Use at the start of tagging and after each save_tags.",
     inputSchema: { limit: z.number().int().min(1).max(20).optional() }, annotations: ro,
-  }, async (a) => asContent(h.getUntaggedReviews(ctx, a)));
+  }, async (a) => asContent(await h.getUntaggedReviews(ctx, a)));
 
   server.registerTool("save_tags", {
     title: "Save themes and flags",
@@ -60,31 +60,31 @@ export function createServer(ctx: Ctx): McpServer {
         escalation_reason: z.string().optional(), spam: z.boolean().optional(), injection_attempt: z.boolean().optional(), confidence: z.enum(["high", "medium", "low"]).optional(),
       })),
     },
-  }, async (a) => asContent(h.saveTags(ctx, a)));
+  }, async (a) => asContent(await h.saveTags(ctx, a)));
 
   server.registerTool("get_digest", {
     title: "Get the digest",
     description: "Get the numbers behind a summary of the reviews: totals, average stars, most praised and most criticised themes with counts and exact quotes, umbrella groups, trends, serious reviews waiting for the owner, spam ignored. Use when the owner asks how the business is doing.",
     inputSchema: { days: z.number().int().min(7).max(730).optional().describe("Length of the period, default 90, ending at the newest review"), from: z.string().optional(), to: z.string().optional() }, annotations: ro,
-  }, async (a) => asContent(h.getDigest(ctx, a)));
+  }, async (a) => asContent(await h.getDigest(ctx, a)));
 
   server.registerTool("get_theme_reviews", {
     title: "See the reviews behind a theme",
     description: "List the actual reviews behind one theme (and optionally positive or negative only), as evidence. Use when the owner wants detail on one theme.",
     inputSchema: { theme: z.string(), sentiment: z.enum(["positive", "negative"]).optional(), limit: z.number().int().min(1).max(30).optional() }, annotations: ro,
-  }, async (a) => asContent(h.getThemeReviews(ctx, a)));
+  }, async (a) => asContent(await h.getThemeReviews(ctx, a)));
 
   server.registerTool("get_review_for_reply", {
     title: "Get a review to reply to",
     description: "Get one review that needs a reply, with its tags, the business profile, policies and the drafting instructions. Use before writing each reply. Serious reviews come first and are marked restricted.",
     inputSchema: { review_id: z.string().optional() }, annotations: ro,
-  }, async (a) => asContent(h.getReviewForReply(ctx, a)));
+  }, async (a) => asContent(await h.getReviewForReply(ctx, a)));
 
   server.registerTool("save_draft", {
     title: "Save a reply draft",
     description: "Store a reply draft you wrote. Code checks it for promises, invented contact details or offers, banned phrases and length, and returns the exact rule broken so you can rewrite. Nothing is posted anywhere.",
     inputSchema: { review_id: z.string(), draft_text: z.string() },
-  }, async (a) => asContent(h.saveDraft(ctx, a)));
+  }, async (a) => asContent(await h.saveDraft(ctx, a)));
 
   server.registerTool("review_drafts", {
     title: "List and decide on drafts",
@@ -94,25 +94,25 @@ export function createServer(ctx: Ctx): McpServer {
       actions: z.array(z.object({ review_id: z.string(), action: z.enum(["approve", "edit", "reject", "mark_handled"]), edited_text: z.string().optional() })).optional(),
       approve_all_safe: z.object({ confirm: z.boolean() }).optional(),
     },
-  }, async (a) => asContent(h.reviewDrafts(ctx, a)));
+  }, async (a) => asContent(await h.reviewDrafts(ctx, a)));
 
   server.registerTool("record_fix", {
     title: "Log a fix",
     description: "Log a change the owner made (for example hired extra staff for weekends) against a theme, with the date, so its effect can be measured later.",
     inputSchema: { theme: z.string(), description: z.string(), date_done: z.string().describe("YYYY-MM-DD") },
-  }, async (a) => asContent(h.recordFix(ctx, a)));
+  }, async (a) => asContent(await h.recordFix(ctx, a)));
 
   server.registerTool("check_fix_impact", {
     title: "Check a fix's impact",
     description: "Compare how often a theme was criticised before and after a logged fix. Use some weeks after a fix. Warns when there are too few reviews to conclude anything.",
     inputSchema: { fix_id: z.string() }, annotations: ro,
-  }, async (a) => asContent(h.checkFixImpact(ctx, a)));
+  }, async (a) => asContent(await h.checkFixImpact(ctx, a)));
 
   server.registerTool("delete_my_data", {
     title: "Delete all my data",
     description: "Permanently delete all reviews, tags, drafts, profile and fixes for this owner. Without confirm = true it only shows what would be deleted.",
     inputSchema: { confirm: z.boolean().optional() }, annotations: { destructiveHint: true },
-  }, async (a) => asContent(h.deleteMyData(ctx, a)));
+  }, async (a) => asContent(await h.deleteMyData(ctx, a)));
 
   server.registerTool("load_demo_data", {
     title: "Load demo reviews",
