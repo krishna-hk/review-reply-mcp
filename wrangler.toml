@@ -1,6 +1,7 @@
 name = "review-reply-mcp"
 main = "src/worker.ts"
 compatibility_date = "2026-10-01"
+preview_urls = false
 
 # Database created with: npx wrangler d1 create review-reply
 [[d1_databases]]
