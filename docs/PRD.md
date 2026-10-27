@@ -4,6 +4,8 @@ thOct 21, 2026 · @Hari
 
 > **Revision 2 (23 Oct 2026), approved by Hari.** Changes since the first version: TypeScript on Cloudflare Workers and D1 replaces Python; two new themes (Menu and dietary needs, Delivery and packaging); English only for now, with food delivery apps in scope; rating-only reviews get a reply and empty rows are ignored; one sentiment per theme with no neutral tag; serious reviews and legal threats go to an owner-approval-only lane with one holding draft and a 12-hour target; spam and injection attempts are ignored and never replied to; repeated-phrase alerts are not in version 1. Details: `docs/ANALYTICS_AND_ESCALATION.md` and `docs/LABELLING_GUIDE.md`.
 
+> **Revision 3 (28 Oct 2026), approved by Hari.** The product is no longer restaurant-only. It is a customer-feedback toolkit for anyone who receives reviews, with product managers and product teams as the first audience (app store reviews, support tickets, survey comments). Changes: each user defines their own themes (a ready-made list, or the AI proposes a list from the user's own reviews and the user approves it), stored per user and checked in code; three ready-made lists ship (app feedback, restaurant, general); the serious-review categories are worded to cover safety, legal, discrimination, fraud and security or privacy breaches; reply drafting follows the user's own business profile and policies; a 60-review app-feedback sample (PocketLedger) joins the restaurant sample; there is now a 15th tool, `set_themes`. Mode B (our own API key) stays out of scope, and the pilot is for people with their own Claude or ChatGPT subscription. Where later chapters say "restaurant" or "owner", read "business or product team"; the restaurant material is now the first worked example. Details: `docs/CONTEXT.md` section 16, `docs/TOOLS.md` and `docs/LABELLING_GUIDE_APP.md`.
+
 ## 1. How to read this document
 
 This is the full plan for building the first version (the MVP) of the Review Reply Tool as an MCP product, written so you can read it chapter by chapter without a technical background.
@@ -62,7 +64,7 @@ Many existing tools are built for larger companies, or they draft one reply at a
 
 ### The idea
 
-The owner gives the tool their reviews, starting with a CSV file. An AI reads each review, tags the themes it mentions (a review can have several), flags anything serious that a human must handle, and drafts a reply in the owner's tone. Plain code counts the themes, compares weeks, and writes the digest. The owner approves or edits every reply. Nothing is posted automatically.
+The user gives the tool their reviews, starting with a CSV file. Their own AI reads each review, tags the themes it mentions from the user's own theme list (a review can have several), flags anything serious that a human must handle, and drafts a reply in the owner's tone. Plain code counts the themes, compares weeks, and writes the digest. The owner approves or edits every reply. Nothing is posted automatically.
 
 ### Why we build the MCP server first
 
@@ -268,7 +270,7 @@ We start with a fixed list so the AI uses the same labels every time. The owner 
 | Delivery and packaging | "Soup leaked in the bag", "arrived hot and neat" |
 | Other | Anything else, including spam |
 
-The list above is for restaurants and food delivery apps, the first business type. Other business types, such as clinics or freelancers, would get their own theme pack later. Version 1 supports English only. The tagging rules are in `docs/LABELLING_GUIDE.md`.
+The list above is the restaurant and food delivery list, now one of three ready-made starting lists (Revision 3). Each user can choose a ready-made list or approve their own, and the tool checks every tag against that user's list. Version 1 supports English only. The tagging rules are in `docs/LABELLING_GUIDE.md`.
 
 ### What the AI returns for each review
 
@@ -904,7 +906,7 @@ Twelve decisions are open; for each one I have a default, so you can answer only
 | # | Decision | My default | Why it matters | Needed by |
 | --- | --- | --- | --- | --- |
 | 1 | Target market and languages | **Decided:** English only for now. Launch audience from chapter 3, no fixed market | Sets the sample data, date format and reply language | Checkpoint 0 |
-| 2 | First business type | **Decided:** restaurants and food delivery apps | Decides the starter theme list and sample business | Checkpoint 0 |
+| 2 | First business type | **Decided, then widened in Revision 3:** any business; product managers and app feedback first, restaurants kept as a worked example | Decides the starter theme list and sample business | Checkpoint 0 |
 | 3 | Language of replies | **Decided:** English | Affects prompts and testing | Checkpoint 0 |
 | 4 | Free-tier limits per owner | 100 reviews analysed and 30 drafts in total, until we measure real cost | Controls your spending | Checkpoint 0, revised at 5 |
 | 5 | Which reviews get drafts by default | The most recent 30, plus any unanswered negative ones | Keeps cost and review time low | Checkpoint 2 |

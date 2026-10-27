@@ -3,6 +3,8 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import { parseCsv } from "../src/engine/csv.js";
 import { validateTagOutput } from "../src/engine/tags.js";
+import { presetByKey } from "../src/engine/presets.js";
+import { themeNames } from "../src/engine/themes.js";
 import { parseJson } from "../src/ai/tagger.js";
 import { scoreTags, type Expected } from "../src/ai/score.js";
 
@@ -19,7 +21,10 @@ const table = (p: string) => {
 const reviews = new Map(table(`${dir}/reviews.csv`).map((r) => [r.review_id!, r]));
 const key = table(`${dir}/answer_key.csv`).filter((k) => k.set === set);
 const batch = key.map((k) => ({ review_id: k.review_id!, text: reviews.get(k.review_id!)!.text! }));
-const { accepted, rejected } = validateTagOutput(parseJson(readFileSync(file, "utf8")), batch);
+const presetIdx = process.argv.indexOf("--preset");
+const preset = presetByKey(presetIdx > 0 ? process.argv[presetIdx + 1]! : "restaurant");
+if (!preset) throw new Error("Unknown --preset. Use restaurant, app_feedback or general.");
+const { accepted, rejected } = validateTagOutput(parseJson(readFileSync(file, "utf8")), batch, themeNames(preset.themes));
 for (const r of rejected) console.log(`rejected by code: ${r.review_id}: ${r.problem}`);
 const expected: Expected[] = key.map((k) => ({
   review_id: k.review_id!,

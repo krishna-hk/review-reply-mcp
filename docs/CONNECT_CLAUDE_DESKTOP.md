@@ -29,7 +29,7 @@ The full path to `node` is needed because the Claude app does not see the Node.j
 
 ## 2. Restart the Claude desktop app
 
-Quit it completely (Cmd+Q) and open it again. In a new chat, click the tools or connectors icon. You should see "review-reply" with 14 tools. If it shows an error, open the Developer settings to see the log and send it to me.
+Quit it completely (Cmd+Q) and open it again. In a new chat, click the tools or connectors icon. You should see "review-reply" with 15 tools. If it shows an error, open the Developer settings to see the log and send it to me.
 
 ## 3. Try it
 

@@ -1,4 +1,4 @@
-import { isTheme, type Sentiment, type Theme } from "./themes.js";
+import { OTHER, type Sentiment, type Theme } from "./themes.js";
 import type { EscalationCategory } from "./safety.js";
 import { splitSentences } from "./quotes.js";
 
@@ -23,9 +23,10 @@ export interface Rejected {
  * Checks what the AI returned for a batch, in code. Anything invalid is rejected with the exact rule broken,
  * so the AI can fix it. Nothing from the AI is trusted until it passes here.
  */
-export function validateTagOutput(raw: unknown, batch: { review_id: string; text: string }[]): { accepted: TagResult[]; rejected: Rejected[] } {
+export function validateTagOutput(raw: unknown, batch: { review_id: string; text: string }[], themes: readonly string[]): { accepted: TagResult[]; rejected: Rejected[] } {
   const accepted: TagResult[] = [];
   const rejected: Rejected[] = [];
+  const allowed = new Set(themes);
   const texts = new Map(batch.map((b) => [b.review_id, b.text]));
   const list = Array.isArray(raw) ? raw : [];
   const seen = new Set<string>();
@@ -49,8 +50,8 @@ export function validateTagOutput(raw: unknown, batch: { review_id: string; text
       const tt = (t ?? {}) as Record<string, unknown>;
       const theme = String(tt.theme ?? "");
       const sentiment = String(tt.sentiment ?? "");
-      if (!isTheme(theme)) {
-        problems.push(`unknown theme "${theme}"`);
+      if (!allowed.has(theme)) {
+        problems.push(`unknown theme "${theme}"; use exactly one of: ${themes.join(", ")}`);
         continue;
       }
       if (sentiment !== "positive" && sentiment !== "negative") {
@@ -73,7 +74,7 @@ export function validateTagOutput(raw: unknown, batch: { review_id: string; text
       continue;
     }
     // Spam is automatically Other negative and never escalated (labelling guide rule 17).
-    const finalTags: TagResult["tags"] = spam ? [{ theme: "Other", sentiment: "negative" }] : tags;
+    const finalTags: TagResult["tags"] = spam ? [{ theme: OTHER, sentiment: "negative" }] : tags;
     const confidence = o.confidence === "low" || o.confidence === "medium" ? o.confidence : "high";
     accepted.push({
       review_id: id,

@@ -9,12 +9,15 @@ import { KeyReplayModel, type KeyRow } from "../src/ai/stub.js";
 import { tagBatch, type BatchReview } from "../src/ai/tagger.js";
 import { scoreTags, type Expected } from "../src/ai/score.js";
 import type { TagResult } from "../src/engine/tags.js";
+import { presetByKey } from "../src/engine/presets.js";
 
 const args = process.argv.slice(2);
 const opt = (name: string, dflt: string) => (args.includes(`--${name}`) ? args[args.indexOf(`--${name}`) + 1]! : dflt);
 const set = opt("set", "tuning");
 const modelName = opt("model", "gemini");
 const batchSize = Number(opt("batch", "10"));
+const preset = presetByKey(opt("preset", "restaurant"));
+if (!preset) throw new Error("Unknown --preset. Use restaurant, app_feedback or general.");
 if (set === "test" && !args.includes("--final")) {
   console.error("The test set is sealed. It is only for the final measurement. Add --final if the instructions are done.");
   process.exit(1);
@@ -50,7 +53,7 @@ for (let i = 0; i < key.length; i += batchSize) {
   console.log(`Tagging ${batch[0]!.review_id} to ${batch[batch.length - 1]!.review_id} with ${model.name}...`);
   // Finished batches are saved so a dropped connection does not lose work. Delete data/eval/.cache to start fresh.
   const cacheFile = `data/eval/.cache/${modelName}-${set}-${batchSize}-${batch[0]!.review_id}.json`;
-  const r = existsSync(cacheFile) && modelName !== "stub" ? JSON.parse(readFileSync(cacheFile, "utf8")) : await tagBatch(model, batch);
+  const r = existsSync(cacheFile) && modelName !== "stub" ? JSON.parse(readFileSync(cacheFile, "utf8")) : await tagBatch(model, batch, preset.themes, preset.guidance);
   if (modelName !== "stub") writeFileSync(cacheFile, JSON.stringify(r));
   got.push(...r.accepted);
   rejected += r.rejected.length;

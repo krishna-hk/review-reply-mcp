@@ -5,7 +5,7 @@ import type { TaggedReview } from "../engine/analytics.js";
 import type { TagResult } from "../engine/tags.js";
 import type { EscalationCategory, Lane } from "../engine/safety.js";
 import { laneFor } from "../engine/safety.js";
-import type { Sentiment, Theme } from "../engine/themes.js";
+import type { Sentiment, Theme, ThemeDef } from "../engine/themes.js";
 
 export interface StoredReview {
   review_id: string;
@@ -95,6 +95,46 @@ export class Store {
       this.ownerId, p.business_name, p.business_type ?? null, p.tone ?? null, p.signature ?? null, p.contact ?? null,
       JSON.stringify(p.policies), JSON.stringify(p.never_say), JSON.stringify(p.languages), this.now(),
     );
+  }
+
+  // ---- themes
+  /** The owner's own theme list, or null until they have set one. */
+  async getThemes(): Promise<{ themes: ThemeDef[]; preset: string | null; rules: string[] } | null> {
+    const rows = await this.all("SELECT name, description, group_name FROM owner_themes WHERE owner_id = ? ORDER BY position", this.ownerId);
+    if (rows.length === 0) return null;
+    const settings = await this.one("SELECT preset, rules FROM theme_settings WHERE owner_id = ?", this.ownerId);
+    return {
+      themes: rows.map((r) => ({ name: String(r.name), description: String(r.description), ...(r.group_name ? { group: String(r.group_name) } : {}) })),
+      preset: settings?.preset ? String(settings.preset) : null,
+      rules: settings ? JSON.parse(String(settings.rules)) : [],
+    };
+  }
+  async saveThemes(themes: ThemeDef[], preset: string | null, rules: string[]) {
+    await this.batch([
+      { sql: "DELETE FROM owner_themes WHERE owner_id = ?", params: [this.ownerId] },
+      ...themes.map((t, i) => ({ sql: "INSERT INTO owner_themes (owner_id, position, name, description, group_name) VALUES (?, ?, ?, ?, ?)", params: [this.ownerId, i, t.name, t.description, t.group ?? null] as SqlValue[] })),
+      {
+        sql: `INSERT INTO theme_settings (owner_id, preset, rules, updated_at) VALUES (?, ?, ?, ?)
+              ON CONFLICT(owner_id) DO UPDATE SET preset = excluded.preset, rules = excluded.rules, updated_at = excluded.updated_at`,
+        params: [this.ownerId, preset, JSON.stringify(rules), this.now()],
+      },
+    ]);
+  }
+  /** Theme names that at least one tag uses. */
+  async usedThemes(): Promise<string[]> {
+    return (await this.all("SELECT DISTINCT theme FROM tags WHERE owner_id = ?", this.ownerId)).map((r) => String(r.theme));
+  }
+  /** Removes every tag, flag and draft (reviews stay) so the reviews can be tagged again with a new theme list. */
+  async clearTags() {
+    await this.batch([
+      { sql: "DELETE FROM drafts WHERE owner_id = ?", params: [this.ownerId] },
+      { sql: "DELETE FROM tags WHERE owner_id = ?", params: [this.ownerId] },
+      { sql: "DELETE FROM review_flags WHERE owner_id = ?", params: [this.ownerId] },
+    ]);
+  }
+  /** A small spread of review text, for choosing themes. Newest first. */
+  async sampleReviews(limit: number): Promise<StoredReview[]> {
+    return (await this.all("SELECT * FROM reviews WHERE owner_id = ? AND TRIM(text) != '' ORDER BY COALESCE(review_date, '') DESC, review_id LIMIT ?", this.ownerId, limit)).map((r) => this.toReview(r));
   }
 
   // ---- reviews
@@ -299,6 +339,7 @@ export class Store {
       drafts: await n("SELECT COUNT(*) AS n FROM drafts WHERE owner_id = ?"),
       fixes: await n("SELECT COUNT(*) AS n FROM fixes WHERE owner_id = ?"),
       profile: await n("SELECT COUNT(*) AS n FROM business_profiles WHERE owner_id = ?"),
+      themes: await n("SELECT COUNT(*) AS n FROM owner_themes WHERE owner_id = ?"),
     };
   }
   /** Removes every row this owner has, then re-creates the empty owner record. */

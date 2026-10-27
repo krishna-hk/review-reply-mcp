@@ -51,10 +51,10 @@ async function tagEverything(call: (n: string, a?: Record<string, unknown>) => P
 }
 
 describe("tool list", () => {
-  it("exposes exactly the 14 tools and the weekly prompt, and no tool that posts anywhere", async () => {
+  it("exposes exactly the 15 tools and the weekly prompt, and no tool that posts anywhere", async () => {
     const { client } = await setup();
     const names = (await client.listTools()).tools.map((t) => t.name).sort();
-    expect(names).toEqual(["check_fix_impact", "delete_my_data", "get_business_profile", "get_digest", "get_review_for_reply", "get_theme_reviews", "get_untagged_reviews", "import_reviews", "load_demo_data", "record_fix", "review_drafts", "save_draft", "save_tags", "set_business_profile"]);
+    expect(names).toEqual(["check_fix_impact", "delete_my_data", "get_business_profile", "get_digest", "get_review_for_reply", "get_theme_reviews", "get_untagged_reviews", "import_reviews", "load_demo_data", "record_fix", "review_drafts", "save_draft", "save_tags", "set_business_profile", "set_themes"]);
     expect(names.some((n) => /post|publish|send|reply_to_platform/.test(n))).toBe(false);
     expect((await client.listPrompts()).prompts.map((p) => p.name)).toEqual(["weekly_review"]);
   });
@@ -137,7 +137,8 @@ describe("saving tags", () => {
     await call("load_demo_data");
     const r = await call("save_tags", { results: [{ review_id: "demo_R001", tags: [{ theme: "Vibes", sentiment: "positive" }] }, { review_id: "nope", tags: [] }] });
     expect(r.saved).toBe(0);
-    expect(r.rejected.map((x: any) => x.problem)).toEqual(['unknown theme "Vibes"', "no such review for this owner"]);
+    expect(r.rejected[0].problem).toContain('unknown theme "Vibes"; use exactly one of: Wait time and speed');
+    expect(r.rejected[1].problem).toBe("no such review for this owner");
     const again = await call("save_tags", { results: [tagResultFor("demo_R001")] });
     expect(again.saved).toBe(1);
     expect(again.remaining_untagged).toBe(39);
@@ -150,6 +151,7 @@ describe("imports", () => {
     const csv = "review,stars,date\nGreat food,5,2026-01-02\n,4,2026-01-03\n,,\nGreat food,5,2026-01-02\n";
     const r = await call("import_reviews", { csv_text: csv });
     expect(r).toMatchObject({ added: 2, skipped_duplicates: 1, rejected: 1, untagged_reviews: 1 });
+    await call("set_themes", { preset: "restaurant" });
     const u = await call("get_untagged_reviews");
     expect(u.reviews).toHaveLength(1);
     const bad = await call("import_reviews", { csv_text: "foo,bar\n1,2\n" });
@@ -187,7 +189,9 @@ describe("owner isolation and deletion", () => {
     const a = await setup("alice", db);
     const b = await setup("bob", db);
     await a.call("load_demo_data");
+    await b.call("set_themes", { preset: "restaurant" });
     expect((await b.call("get_untagged_reviews")).reviews).toEqual([]);
+    expect(await b.call("get_theme_reviews", { theme: "Staff attitude" })).toMatchObject({ shown: 0 });
     expect((await b.call("get_business_profile")).profile).toBeNull();
     expect((await b.call("save_tags", { results: [tagResultFor("demo_R001")] })).rejected[0].problem).toBe("no such review for this owner");
     expect((await b.call("get_review_for_reply", { review_id: "demo_R001" })).error).toBeDefined();
@@ -203,7 +207,7 @@ describe("owner isolation and deletion", () => {
     expect(await store.reviewCount()).toBe(40);
     const real = await call("delete_my_data", { confirm: true });
     expect(real.deleted).toBe(true);
-    expect(await store.summaryCounts()).toEqual({ reviews: 0, tags: 0, flags: 0, drafts: 0, fixes: 0, profile: 0 });
+    expect(await store.summaryCounts()).toEqual({ reviews: 0, tags: 0, flags: 0, drafts: 0, fixes: 0, profile: 0, themes: 0 });
   });
 
   it("demo data will not mix with real reviews unless asked to replace", async () => {
@@ -247,5 +251,77 @@ describe("fixes", () => {
     const none = await call("check_fix_impact", { fix_id: "fix_2" });
     expect(none).toMatchObject({ enough_data: false });
     expect(none.statement).toContain("no reviews after the fix date");
+  });
+});
+
+describe("the user's own themes", () => {
+  const csv = "review_id,text,rating,date\nx1,The app crashes when I export.,1,2026-03-01\nx2,Love the dark mode.,5,2026-03-02\n";
+
+  it("asks for themes before tagging, offering ready-made lists and a sample of the reviews", async () => {
+    const { call } = await setup();
+    await call("import_reviews", { csv_text: csv });
+    const r = await call("get_untagged_reviews");
+    expect(r.themes_needed).toBe(true);
+    expect(r.ready_made_lists.map((p: any) => p.key)).toEqual(["app_feedback", "restaurant", "general"]);
+    expect(r.sample_reviews).toHaveLength(2);
+    expect(r.sample_reviews[0].untrusted_review_text).toBeDefined();
+    const s = await call("save_tags", { results: [{ review_id: "x1", tags: [] }] });
+    expect(s.error).toContain("No themes");
+  });
+
+  it("saves a ready-made list or the user's own list, and tags only with those themes", async () => {
+    const { call } = await setup();
+    await call("import_reviews", { csv_text: csv });
+    const mine = [
+      { name: "Crashes", description: "The app crashes or freezes", group: "Quality" },
+      { name: "Looks", description: "Design, colours and dark mode", group: "Experience" },
+      { name: "Pricing", description: "Cost and plans" },
+    ];
+    const saved = await call("set_themes", { themes: mine, rules: ["Dark mode is Looks"] });
+    expect(saved.saved).toBe(true);
+    expect(saved.themes.map((t: any) => t.name)).toEqual(["Crashes", "Looks", "Pricing", "Other"]);
+    const batch = await call("get_untagged_reviews");
+    expect(batch.themes.map((t: any) => t.name)).toEqual(["Crashes", "Looks", "Pricing", "Other"]);
+    expect(batch.tagging_instructions).toContain("- Crashes: The app crashes or freezes");
+    expect(batch.tagging_instructions).toContain("Dark mode is Looks");
+    const bad = await call("save_tags", { results: [{ review_id: "x1", tags: [{ theme: "Wait time and speed", sentiment: "negative" }] }] });
+    expect(bad.saved).toBe(0);
+    expect(bad.rejected[0].problem).toContain("use exactly one of: Crashes, Looks, Pricing, Other");
+    const ok = await call("save_tags", { results: [
+      { review_id: "x1", tags: [{ theme: "Crashes", sentiment: "negative", evidence: 0 }] },
+      { review_id: "x2", tags: [{ theme: "Looks", sentiment: "positive", evidence: 0 }] },
+    ] });
+    expect(ok.saved).toBe(2);
+    const digest = await call("get_digest");
+    expect(digest.umbrella_groups_explained).toEqual({ Quality: ["Crashes"], Experience: ["Looks"] });
+    expect(digest.groups).toEqual({ Quality: { positive: 0, negative: 1 }, Experience: { positive: 1, negative: 0 } });
+    expect((await call("record_fix", { theme: "Crashes", description: "Fixed export", date_done: "2026-03-05" })).saved).toBe(true);
+    expect((await call("record_fix", { theme: "Staff attitude", description: "x", date_done: "2026-03-05" })).error).toContain("Unknown theme");
+  });
+
+  it("checks a theme list in code and will not drop themes already in use without the user's agreement", async () => {
+    const { call } = await setup();
+    await call("import_reviews", { csv_text: csv });
+    const few = await call("set_themes", { themes: [{ name: "A1", description: "x y" }] });
+    expect(few.saved).toBe(false);
+    expect(few.rejected_because.join(" ")).toContain("at least 3");
+    expect((await call("set_themes", { preset: "nope" })).error).toContain("Unknown preset");
+    expect((await call("set_themes", {})).error).toContain("Give a preset");
+    await call("set_themes", { preset: "app_feedback" });
+    await call("save_tags", { results: [{ review_id: "x1", tags: [{ theme: "Bugs and crashes", sentiment: "negative" }] }] });
+    const swap = await call("set_themes", { preset: "restaurant" });
+    expect(swap.saved).toBe(false);
+    expect(swap.error).toContain("Bugs and crashes");
+    expect(await call("set_themes", { preset: "restaurant", retag_all: true })).toMatchObject({ saved: true, untagged_reviews: 2 });
+  });
+
+  it("runs the whole flow on the app demo with the app themes and app rules", async () => {
+    const { call } = await setup();
+    expect(await call("load_demo_data", { kind: "app" })).toMatchObject({ loaded: true, kind: "app", added: 60 });
+    const b = await call("get_untagged_reviews");
+    expect(b.themes.map((t: any) => t.name)).toContain("Bugs and crashes");
+    expect(b.tagging_instructions).toContain("Updates and changes");
+    expect(b.tagging_instructions).not.toContain("Delivery and packaging");
+    expect((await call("get_business_profile")).profile.business_name).toContain("PocketLedger");
   });
 });

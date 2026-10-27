@@ -24,11 +24,11 @@ async function connect(d: AppDeps, url: string) {
 }
 
 describe("hosted server over HTTP", () => {
-  it("serves the 14 tools at a personal link and works end to end", async () => {
+  it("serves the 15 tools at a personal link and works end to end", async () => {
     const d = deps();
     const { connect_url } = await invite(d);
     const { client, call } = await connect(d, connect_url);
-    expect((await client.listTools()).tools).toHaveLength(14);
+    expect((await client.listTools()).tools).toHaveLength(15);
     expect(await call("load_demo_data")).toMatchObject({ loaded: true, added: 40 });
     expect((await call("get_untagged_reviews")).reviews).toHaveLength(20);
   });

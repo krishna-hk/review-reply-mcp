@@ -1,17 +1,17 @@
 # Tool reference
 
-The server exposes 14 tools. The AI app calls them; the server counts, checks and stores. Every call is scoped to one owner (the person behind the connection link). Every result carries a `next_step` hint and remaining counts so the AI knows what to do next. Saves are idempotent: sending the same save twice does not duplicate anything.
+The server exposes 15 tools. The AI app calls them; the server counts, checks and stores. Every call is scoped to one owner (the person or team behind the connection link). Themes are the owner's own: a ready-made list or one the owner approves. Every result carries a `next_step` hint and remaining counts so the AI knows what to do next. Saves are idempotent: sending the same save twice does not duplicate anything.
 
 ## The standard flow
 
 ```
-set_business_profile -> import_reviews -> get_untagged_reviews -> save_tags (repeat until none left)
+set_business_profile -> import_reviews -> get_untagged_reviews (first time: pick themes) -> set_themes -> get_untagged_reviews -> save_tags (repeat until none left)
    -> get_digest -> (get_theme_reviews)
    -> get_review_for_reply -> save_draft (repeat) -> review_drafts
    -> record_fix ... later ... check_fix_impact
 ```
 
-Anytime: `get_business_profile`, `load_demo_data`, `delete_my_data`.
+Anytime: `get_business_profile`, `set_themes` (to change the list), `load_demo_data`, `delete_my_data`.
 
 ## Summary table
 
@@ -30,7 +30,8 @@ Anytime: `get_business_profile`, `load_demo_data`, `delete_my_data`.
 | 11 | `record_fix` | Log a change the owner made | When the owner says "we fixed X" |
 | 12 | `check_fix_impact` | Compare theme mentions before and after a fix | Some weeks after a fix |
 | 13 | `delete_my_data` | Erase everything for this owner | On request; needs a confirm flag |
-| 14 | `load_demo_data` | Load synthetic sample reviews | First try, demos, tests |
+| 14 | `load_demo_data` | Load synthetic sample reviews (restaurant or app) | First try, demos, tests |
+| 15 | `set_themes` | Choose the owner's own theme list (preset or custom) | Before first tagging; when the list changes |
 
 ## Details
 
@@ -54,13 +55,14 @@ Anytime: `get_business_profile`, `load_demo_data`, `delete_my_data`.
 ### 4. get_untagged_reviews
 - **Does:** returns up to 20 reviews that have no tags, with `review_id`, rating, text and date. Review text is wrapped and labelled as untrusted content.
 - **Needs:** optional `limit` (max 20).
-- **Returns:** the batch, number remaining, the theme list (10 starter themes plus "Other") and the tagging rules.
+- **Returns:** the batch, number remaining, the owner's theme list with descriptions, and the tagging rules for their kind of business. If no themes are chosen yet it returns `themes_needed`, the ready-made lists and a sample of the reviews instead, so the AI can propose themes.
+- **Where themes come from:** `set_themes`. There is no fixed list in the code.
 
 ### 5. save_tags
 - **Does:** stores the themes the AI found, per review.
-- **Workflow:** validate every `review_id` belongs to this owner -> validate themes are on the list -> validate sentiment values -> save one or more (theme, sentiment) pairs per review -> save escalation flags with reason -> return saved count and remaining untagged.
+- **Workflow:** validate every `review_id` belongs to this owner -> validate themes are on the owner's list -> validate sentiment values -> save one or more (theme, sentiment) pairs per review -> save escalation flags with reason -> return saved count and remaining untagged.
 - **Needs:** list of `{review_id, tags: [{theme, sentiment}], escalate: bool, escalation_reason}`.
-- **Rules enforced in code:** unknown themes rejected; a review with no theme is tagged "Other"; escalation reasons limited to health or safety, legal threat, discrimination, fraud, or other serious.
+- **Rules enforced in code:** unknown themes rejected (the message lists the allowed names); spam becomes Other, negative; escalation categories limited to health or safety, legal threat, discrimination, fraud, or other serious (which also covers security or privacy breaches).
 
 ### 6. get_digest
 - **Does:** produces the numbers behind the digest. Code counts everything; the AI only turns it into prose.
@@ -102,8 +104,14 @@ Anytime: `get_business_profile`, `load_demo_data`, `delete_my_data`.
 - **Needs:** `confirm: true`. Without it, the tool describes what would be deleted and stops.
 
 ### 14. load_demo_data
-- **Does:** loads about 40 synthetic reviews for a fictional business, clearly marked as demo, so someone can try the whole flow in a minute.
+- **Does:** loads synthetic reviews for a fictional business, clearly marked as demo, so someone can try the whole flow in a minute. `kind: "restaurant"` (default, 40 reviews) or `kind: "app"` (60 reviews for a budgeting app). It also sets the matching profile and theme list.
 - **Needs:** nothing. Will not run if real reviews exist unless `replace: true` is passed.
+
+### 15. set_themes
+- **Does:** saves the owner's theme list, stored per owner. The AI either picks a ready-made list (`app_feedback`, `restaurant`, `general`) or proposes its own from a sample of the reviews, and the owner approves it before it is saved.
+- **Workflow:** validate in code (3 to 15 themes, plain names up to 40 characters, one-line descriptions, no markup or line breaks, no duplicates; "Other" is added automatically) -> refuse if existing tags use themes missing from the new list, unless `retag_all` is true -> save -> return the list.
+- **Needs:** `preset`, or `themes: [{name, description, group?}]`; optional `rules` (up to 10 short extra tagging rules); optional `retag_all` (clears all tags, serious flags and drafts; reviews are kept).
+- **Why in code:** theme names go into the tagging instructions, so they are kept plain, and every tag the AI returns is checked against this list.
 
 ## Cross-cutting rules
 

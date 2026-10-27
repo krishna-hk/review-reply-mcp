@@ -1,8 +1,8 @@
 # Review Reply MCP
 
-> Turn a pile of customer reviews into themes, a plain-language digest and reply drafts you approve, from inside the AI app you already use.
+> Turn any pile of customer feedback (app reviews, support tickets, survey comments, Google reviews) into your own themes, a plain-language digest with exact quotes, and reply drafts you approve, from inside the AI app you already use.
 
-**Status: planning.** Nothing is live yet. This repository holds the plan, the tool specification and the build as it happens. Working name; it may change.
+**Status: working prototype.** 15 tools, tested, running locally and on a hosted server. Pilot with real users has not started. Working name; it may change.
 
 ---
 
@@ -12,9 +12,10 @@ This is built for people with **a bit of technical know-how** who deal with cust
 
 **Primary audience**
 
-- **Marketing freelancers and small agencies** who manage Google reviews for several local clients and want one repeatable routine instead of copy-pasting into a chat window each time.
-- **Owners and their "helpers"** (a manager, a relative, an assistant) who are comfortable exporting a CSV and pasting a connector link into an AI app.
-- **Product managers, indie builders and AI-curious people** who want a real, small MCP tool to try, learn from, or build on, and who will tell us what is confusing.
+- **Product managers and product teams** who want to know what users keep raising in app store reviews, support tickets or survey comments, and whether a fix helped.
+- **Marketing freelancers and small agencies** who manage reviews for several clients and want one repeatable routine instead of copy-pasting into a chat window each time.
+- **Owners and their "helpers"** (a manager, a relative, an assistant) of any business with reviews, who are comfortable exporting a CSV and pasting a connector link into an AI app.
+- **Indie builders and AI-curious people** who want a real, small MCP tool to try, learn from, or build on.
 
 **Not for, yet**
 
@@ -30,8 +31,8 @@ This is built for people with **a bit of technical know-how** who deal with cust
 
 ## What it does
 
-1. **Tags every review** with one or more themes (wait time, staff attitude, price and so on) and whether each is positive or negative.
-2. **Flags serious reviews** (health, safety, legal threats, discrimination) for a human instead of drafting a casual reply.
+1. **Tags every review** with one or more of *your* themes (for an app: bugs, onboarding, pricing; for a restaurant: wait time, staff attitude, and so on) and whether each is positive or negative. Choose a ready-made list or let your AI propose one from your reviews, and you approve it.
+2. **Flags serious reviews** (health, safety, legal threats, discrimination, fraud, security or privacy breaches) for a human instead of drafting a casual reply.
 3. **Writes a digest**: top praise, top complaints, what is rising, what is new, with exact quotes from real reviews.
 4. **Drafts replies** in your tone and within your policies. You approve each one and post it yourself.
 5. **Tracks fixes**: log a change you made, and later see whether mentions of that problem dropped.

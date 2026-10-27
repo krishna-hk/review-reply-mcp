@@ -1,4 +1,4 @@
-import { groupOf, type Sentiment, type Theme, UMBRELLA_GROUPS } from "./themes.js";
+import type { Sentiment, Theme } from "./themes.js";
 import { isExactQuote, pickQuote, quoteFromSentence } from "./quotes.js";
 
 export interface TaggedReview {
@@ -32,10 +32,11 @@ export function countByTheme(reviews: TaggedReview[]): Map<Theme, Counts> {
   return out;
 }
 
-export function countByGroup(reviews: TaggedReview[]): Record<string, Counts> {
-  const out: Record<string, Counts> = Object.fromEntries(Object.keys(UMBRELLA_GROUPS).map((g) => [g, { positive: 0, negative: 0 }]));
+/** Rolls theme counts up into the user's own umbrella groups (group name to the themes in it). */
+export function countByGroup(reviews: TaggedReview[], groups: Record<string, readonly string[]> = {}): Record<string, Counts> {
+  const out: Record<string, Counts> = Object.fromEntries(Object.keys(groups).map((g) => [g, { positive: 0, negative: 0 }]));
   for (const [theme, c] of countByTheme(reviews)) {
-    const g = groupOf(theme);
+    const g = Object.keys(groups).find((name) => groups[name]!.includes(theme));
     if (!g) continue;
     out[g]!.positive += c.positive;
     out[g]!.negative += c.negative;
@@ -112,7 +113,7 @@ function topThemes(reviews: TaggedReview[], previous: TaggedReview[], sentiment:
     });
 }
 
-export function buildDigest(reviews: TaggedReview[], previous: TaggedReview[] = [], limit = 3): DigestData {
+export function buildDigest(reviews: TaggedReview[], previous: TaggedReview[] = [], limit = 3, groups: Record<string, readonly string[]> = {}): DigestData {
   const real = reviews.filter((r) => r.lane !== "spam");
   const rated = real.filter((r) => r.rating !== null);
   const avg = rated.length ? rated.reduce((s, r) => s + r.rating!, 0) / rated.length : null;
@@ -122,7 +123,7 @@ export function buildDigest(reviews: TaggedReview[], previous: TaggedReview[] = 
     average_rating: avg === null ? null : Math.round(avg * 100) / 100,
     top_praised: topThemes(real, previous, "positive", limit),
     top_criticised: topThemes(real, previous, "negative", limit),
-    groups: countByGroup(real),
+    groups: countByGroup(real, groups),
     waiting_for_owner: reviews.filter((r) => r.lane === "restricted").length,
     spam_ignored: reviews.filter((r) => r.lane === "spam").length,
   };

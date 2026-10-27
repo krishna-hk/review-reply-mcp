@@ -125,3 +125,14 @@ Mode B (hosted AI on Hari's API key) is **out of scope for the pilot and for now
 ## 15. Hosted server live (27 Oct 2026)
 
 Deployed to Cloudflare Workers with D1 at `https://review-reply-mcp.hk-reviews-mcp.workers.dev` (account subdomain `hk-reviews-mcp`). Personal links `/mcp/<secret>` per tester; admin password in `data/private/admin-token.txt` (Git-ignored) and as a Worker secret. 80 tests pass, and the Worker was also run in Cloudflare's local runtime. See `docs/HOSTED_SERVER.md`. Not yet done: connect a real Claude connector to the hosted link, test ChatGPT, write a plain-language privacy statement, pilot.
+
+## 16. Direction change: any business, product managers first (28 Oct 2026)
+
+Hari decided the product should not be restaurant-only: restaurant owners rarely handle reviews and would not share data, while product managers do this work and can share their own exports. Approved by Hari (PRD Revision 3). The idea: our tools make the user's own AI read and write; we count, check and store.
+
+- **Themes are per user** (`owner_themes`, `theme_settings`; migration 0004). A user picks a ready-made list (`app_feedback`, `restaurant`, `general`; see `src/engine/presets.ts`) or the AI proposes one from a sample of the reviews and the user approves it (`set_themes`, the 15th tool). `validateThemeDefs` keeps names plain because they go into the prompt; `validateTagOutput` checks every tag against the user's list. Changing the list after tagging needs `retag_all` and the user's agreement.
+- **Prompts:** `prompts/tagging.md` is now generic; business-type rules live in `prompts/guidance-restaurant.md`, `guidance-app.md` and `guidance-general.md` (all generated into `src/generated/prompts.ts`). `prompts/drafting.md` is generic too. The serious categories keep the same five names; `other_serious` now also covers security or privacy breaches.
+- **Demos:** `load_demo_data` takes `kind` `restaurant` (40 reviews) or `app` (60 reviews, fictional budgeting app PocketLedger in `src/demo/appReviews.ts`).
+- **Sample data for measuring:** `data/sample/app/reviews.csv` (A001 to A060), `data/sample/app/business_profile.json`, and a blank labelling sheet `data/sample/app/labelling_sheet.xlsx` for Hari. Rules: `docs/LABELLING_GUIDE_APP.md`. Hari's labels become the answer key; no answer key written by us exists, to keep it blind.
+- **Not yet re-measured:** the generic prompt plus restaurant rules has passed the stand-in tests only. It must be re-measured with a Claude sub-agent on the restaurant sets, and the app prompt measured against Hari's labels, before any accuracy number is quoted.
+- **Next:** Hari labels the 60 app reviews; measure; fix the guide or rules; redeploy hosted server (migration 0004 must be applied to D1 before the new code); then checkpoint 5 leftovers (privacy statement, ChatGPT test) and the pilot with product managers.

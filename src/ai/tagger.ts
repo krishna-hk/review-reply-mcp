@@ -1,9 +1,13 @@
 import type { ModelClient } from "./model.js";
-import { THEMES } from "../engine/themes.js";
+import { themeNames, type ThemeDef } from "../engine/themes.js";
 import { TAGGING_TEMPLATE } from "../generated/prompts.js";
 import { validateTagOutput, type Rejected, type TagResult } from "../engine/tags.js";
 
-export const TAGGING_PROMPT = TAGGING_TEMPLATE.replace("{{THEME_LIST}}", THEMES.map((t) => `- ${t}`).join("\n"));
+/** Builds the tagging instructions for one user: their own themes, plus the rules for their kind of business. */
+export function buildTaggingPrompt(themes: readonly ThemeDef[], guidance = ""): string {
+  const list = themes.map((t) => `- ${t.name}: ${t.description}`).join("\n");
+  return TAGGING_TEMPLATE.replace("{{THEME_LIST}}", () => list).replace("{{GUIDANCE}}", () => guidance.trim() || "No extra rules. Follow the shared tagging rules above.");
+}
 
 export interface BatchReview {
   review_id: string;
@@ -30,15 +34,18 @@ export function parseJson(text: string): unknown {
 }
 
 /** Tags one batch. Invalid items are retried once with the exact problems fed back. */
-export async function tagBatch(model: ModelClient, batch: BatchReview[]): Promise<{ accepted: TagResult[]; rejected: Rejected[] }> {
-  const first = validateTagOutput(parseJson(await model.complete(TAGGING_PROMPT, buildBatchMessage(batch))), batch);
+export async function tagBatch(model: ModelClient, batch: BatchReview[], themes: readonly ThemeDef[], guidance = ""): Promise<{ accepted: TagResult[]; rejected: Rejected[] }> {
+  const prompt = buildTaggingPrompt(themes, guidance);
+  const names = themeNames(themes);
+  const first = validateTagOutput(parseJson(await model.complete(prompt, buildBatchMessage(batch))), batch, names);
   if (first.rejected.length === 0) return first;
   const retryIds = new Set(first.rejected.map((r) => r.review_id));
   const retryBatch = batch.filter((b) => retryIds.has(b.review_id));
   const notes = first.rejected.map((r) => `${r.review_id}: ${r.problem}`).join("\n");
   const second = validateTagOutput(
-    parseJson(await model.complete(TAGGING_PROMPT, buildBatchMessage(retryBatch) + `\n\nYour earlier answer for these reviews was rejected:\n${notes}\nReturn corrected JSON.`)),
+    parseJson(await model.complete(prompt, buildBatchMessage(retryBatch) + `\n\nYour earlier answer for these reviews was rejected:\n${notes}\nReturn corrected JSON.`)),
     retryBatch,
+    names,
   );
   return { accepted: [...first.accepted, ...second.accepted], rejected: second.rejected };
 }

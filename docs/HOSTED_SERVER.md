@@ -6,7 +6,7 @@ Live at `https://review-reply-mcp.hk-reviews-mcp.workers.dev` (Cloudflare Worker
 
 Each tester gets a personal link of the form `https://review-reply-mcp.hk-reviews-mcp.workers.dev/mcp/<secret>`. The link is the key: anyone who has it can use that tester's data, so send it privately and tell them not to post it. Only a hash of the secret is stored on the server.
 
-**Claude (web or desktop app):** Settings, Connectors, Add custom connector. Name it "Review Reply", paste the link as the URL, leave any sign-in fields empty. Menu names change; check them in the app. In a new chat: "Load the demo data, then run my weekly review check."
+**Claude (web or desktop app):** Settings, Connectors, Add custom connector. Name it "Review Reply", paste the link as the URL, leave any sign-in fields empty. Menu names change; check them in the app. In a new chat: "Load the app demo data, then run my weekly review check." (Say "restaurant demo" for the restaurant one.)
 
 **ChatGPT:** needs Developer Mode on a paid plan and a public https address, which this is. Add the link as a connector with no authentication. Not yet tested by us.
 

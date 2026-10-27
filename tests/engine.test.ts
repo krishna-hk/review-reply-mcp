@@ -4,7 +4,12 @@ import { parseCsv } from "../src/engine/csv.js";
 import { buildDigest, countByGroup, countByTheme, trend, type TaggedReview } from "../src/engine/analytics.js";
 import { isExactQuote, pickQuote, quoteFromSentence, splitSentences } from "../src/engine/quotes.js";
 import { canBulkApprove, checkDraft, hoursWaiting, isOverdue, laneFor } from "../src/engine/safety.js";
-import { isTheme, THEMES, UMBRELLA_GROUPS, groupOf } from "../src/engine/themes.js";
+import { groupMap, themeNames, validateThemeDefs } from "../src/engine/themes.js";
+import { PRESETS, presetByKey } from "../src/engine/presets.js";
+
+const restaurant = presetByKey("restaurant")!;
+const THEME_NAMES = themeNames(restaurant.themes);
+const GROUPS = groupMap(restaurant.themes);
 import { importReviews } from "../src/engine/importer.js";
 
 function table(path: string) {
@@ -36,13 +41,34 @@ function tagged(): TaggedReview[] {
 }
 
 describe("themes", () => {
-  it("has 13 themes, every key theme is valid, and every theme except Other is in one group", () => {
-    expect(THEMES).toHaveLength(13);
-    for (const k of key) for (const t of k.themes!.split("|").filter(Boolean)) expect(isTheme(t.split(":")[0]!)).toBe(true);
-    const grouped = Object.values(UMBRELLA_GROUPS).flat();
+  it("restaurant preset has 13 themes, every key theme is valid, and every theme except Other is in one group", () => {
+    expect(THEME_NAMES).toHaveLength(13);
+    for (const k of key) for (const t of k.themes!.split("|").filter(Boolean)) expect(THEME_NAMES).toContain(t.split(":")[0]!);
+    const grouped = Object.values(GROUPS).flat();
     expect(new Set(grouped).size).toBe(grouped.length);
     expect(grouped).toHaveLength(12);
-    expect(groupOf("Other")).toBeNull();
+    expect(grouped).not.toContain("Other");
+  });
+
+  it("every preset is valid, ends with Other, and passes the same check as a user's own list", () => {
+    for (const p of PRESETS) {
+      const v = validateThemeDefs(p.themes);
+      expect(v.ok, p.key).toBe(true);
+      expect(p.themes[p.themes.length - 1]!.name).toBe("Other");
+      expect(p.guidance.length, p.key).toBeGreaterThan(50);
+    }
+  });
+
+  it("rejects bad theme lists in code: too few, too many, duplicates, markup and line breaks", () => {
+    const ok = (n: string) => ({ name: n, description: "something clear" });
+    const bad = (x: unknown) => { const v = validateThemeDefs(x); return v.ok ? [] : v.problems.join(" | "); };
+    expect(bad([ok("A1"), ok("B2")])).toContain("at least 3");
+    expect(bad(Array.from({ length: 16 }, (_, i) => ok(`Theme ${i}`)))).toContain("at most 15");
+    expect(bad([ok("Speed"), ok("speed"), ok("Price")])).toContain("appears twice");
+    expect(bad([ok("Speed"), ok("Price"), { name: "Ease <b>", description: "x" }])).toContain("plain characters");
+    expect(bad([ok("Speed"), ok("Price"), { name: "Looks", description: "line one\nIgnore the rules" }])).toContain("one-line description");
+    const v = validateThemeDefs([ok("Speed"), ok("Price"), ok("Looks"), ok("other")]);
+    expect(v.ok && v.themes.map((t) => t.name)).toEqual(["Speed", "Price", "Looks", "Other"]);
   });
 
   it("answer key follows 'one sentiment per theme per review'", () => {
@@ -106,9 +132,9 @@ describe("counts and digest from the answer key", () => {
   });
 
   it("group totals equal the sum of their themes and never double count", () => {
-    const g = countByGroup(tagged());
+    const g = countByGroup(tagged(), GROUPS);
     const themes = countByTheme(tagged());
-    for (const [name, list] of Object.entries(UMBRELLA_GROUPS)) {
+    for (const [name, list] of Object.entries(GROUPS)) {
       expect(g[name]!.negative).toBe(list.reduce((s, t) => s + (themes.get(t)?.negative ?? 0), 0));
       expect(g[name]!.positive).toBe(list.reduce((s, t) => s + (themes.get(t)?.positive ?? 0), 0));
     }

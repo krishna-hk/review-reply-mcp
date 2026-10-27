@@ -292,3 +292,19 @@ export const DEMO_PROFILE = {
   never_say: ["voucher", "compensation", "full refund", "free meal", "our fault", "lawsuit"],
   languages: ["en"],
 };
+
+import { APP_DEMO_PROFILE, APP_DEMO_REVIEWS } from "./appReviews.js";
+import type { BusinessProfile } from "../engine/profile.js";
+
+export interface Demo {
+  what: string;
+  /** Which starting theme list the demo uses (see engine/presets.ts). */
+  preset: string;
+  reviews: typeof DEMO_REVIEWS;
+  profile: BusinessProfile;
+}
+
+export const DEMOS: Record<string, Demo> = {
+  restaurant: { what: "restaurant", preset: "restaurant", reviews: DEMO_REVIEWS, profile: DEMO_PROFILE },
+  app: { what: "budgeting app", preset: "app_feedback", reviews: APP_DEMO_REVIEWS, profile: APP_DEMO_PROFILE },
+};
