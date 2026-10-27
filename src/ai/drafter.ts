@@ -1,11 +1,11 @@
-import { readFileSync } from "node:fs";
 import type { ModelClient } from "./model.js";
+import { DRAFTING_TEXT } from "../generated/prompts.js";
 import { parseJson } from "./tagger.js";
 import { checkDraft } from "../engine/safety.js";
 import type { Lane } from "../engine/safety.js";
 import type { BusinessProfile } from "../engine/profile.js";
 
-export const DRAFTING_PROMPT = readFileSync(new URL("../../prompts/drafting.md", import.meta.url), "utf8");
+export const DRAFTING_PROMPT = DRAFTING_TEXT;
 
 export interface DraftRequest {
   review_id: string;

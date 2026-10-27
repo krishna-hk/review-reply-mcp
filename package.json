@@ -9,7 +9,8 @@
     "typecheck": "tsc --noEmit",
     "demo": "tsx scripts/demo.ts",
     "eval": "tsx scripts/eval.ts",
-    "start": "tsx src/stdio.ts"
+    "start": "tsx src/stdio.ts",
+    "gen": "tsx scripts/gen-prompts.ts"
   },
   "engines": {
     "node": ">=22"

@@ -107,3 +107,11 @@ describe("pipeline with the stand-in AI", () => {
     expect(s.misses[0]!.note).toBe("SERIOUS REVIEW NOT FLAGGED");
   });
 });
+
+describe("bundled prompts", () => {
+  it("the generated prompts file matches prompts/*.md (run npm run gen if this fails)", async () => {
+    const gen = await import("../src/generated/prompts.js");
+    expect(gen.TAGGING_TEMPLATE).toBe(readFileSync("prompts/tagging.md", "utf8"));
+    expect(gen.DRAFTING_TEXT).toBe(readFileSync("prompts/drafting.md", "utf8"));
+  });
+});

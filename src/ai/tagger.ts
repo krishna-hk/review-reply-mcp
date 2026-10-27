@@ -1,12 +1,9 @@
-import { readFileSync } from "node:fs";
 import type { ModelClient } from "./model.js";
 import { THEMES } from "../engine/themes.js";
+import { TAGGING_TEMPLATE } from "../generated/prompts.js";
 import { validateTagOutput, type Rejected, type TagResult } from "../engine/tags.js";
 
-export const TAGGING_PROMPT = readFileSync(new URL("../../prompts/tagging.md", import.meta.url), "utf8").replace(
-  "{{THEME_LIST}}",
-  THEMES.map((t) => `- ${t}`).join("\n"),
-);
+export const TAGGING_PROMPT = TAGGING_TEMPLATE.replace("{{THEME_LIST}}", THEMES.map((t) => `- ${t}`).join("\n"));
 
 export interface BatchReview {
   review_id: string;
