@@ -246,7 +246,7 @@ export function saveDraft(ctx: Ctx, a: { review_id: string; draft_text: string }
   if (!review) return { saved: false, error: `No review ${a.review_id} for this owner.` };
   const { lane } = laneOf(ctx, review);
   if (lane === "needs_tagging") return { saved: false, error: "Tag this review first." };
-  const c = checkDraft({ draft: a.draft_text, lane, reviewText: review.text, neverSay: profile.never_say, allowedContacts: profile.contact ? [profile.contact] : [] });
+  const c = checkDraft({ draft: a.draft_text, lane, reviewText: review.text, neverSay: profile.never_say, allowedContacts: profile.contact ? [profile.contact] : [], category: ctx.store.getFlag(review.review_id)?.category });
   if (!c.ok) return { saved: false, rejected_because: c.problems, next_step: "Rewrite the draft so it breaks none of these rules, then call save_draft again." };
   ctx.store.saveDraft(review.review_id, a.draft_text.trim(), lane === "restricted");
   const warnings: string[] = [];
@@ -282,7 +282,7 @@ export function reviewDrafts(ctx: Ctx, a: { status?: string; actions?: Action[];
     else if (act.action === "edit") {
       const review = ctx.store.getReview(act.review_id)!;
       if (!act.edited_text?.trim()) { results.push({ review_id: act.review_id, error: "edited_text is required for edit" }); continue; }
-      const c = checkDraft({ draft: act.edited_text, lane: d.restricted ? "restricted" : "normal", reviewText: review.text, neverSay: profile?.never_say ?? [], allowedContacts: profile?.contact ? [profile.contact] : [] });
+      const c = checkDraft({ draft: act.edited_text, lane: d.restricted ? "restricted" : "normal", reviewText: review.text, neverSay: profile?.never_say ?? [], allowedContacts: profile?.contact ? [profile.contact] : [], category: ctx.store.getFlag(act.review_id)?.category });
       if (!c.ok) { results.push({ review_id: act.review_id, error: "edit rejected", problems: c.problems }); continue; }
       ctx.store.decideDraft(act.review_id, "edited", act.edited_text.trim());
       if (d.restricted) ctx.store.closeFlag(act.review_id);

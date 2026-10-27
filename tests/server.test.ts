@@ -88,7 +88,7 @@ describe("the whole flow with demo data", () => {
     const bad = await call("save_draft", { review_id: next.review.review_id, draft_text: "Sorry, here is a full refund." });
     expect(bad.saved).toBe(false);
     expect(bad.rejected_because).toContain("promises a refund");
-    const ok = await call("save_draft", { review_id: next.review.review_id, draft_text: "We are sorry you had this experience and take it seriously. Please contact us at hello@saffronandsalt.example so we can look into it. The Saffron & Salt team" });
+    const ok = await call("save_draft", { review_id: next.review.review_id, draft_text: "We are sorry you or anyone with you had a bad experience, we hope you are well, and we take this seriously. Please contact us at hello@saffronandsalt.example so we can look into it. The Saffron & Salt team" });
     expect(ok).toMatchObject({ saved: true, lane: "restricted" });
 
     // A normal 5-star draft

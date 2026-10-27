@@ -195,6 +195,20 @@ describe("draft checks", () => {
     expect(checkDraft({ ...base, lane: "spam", draft: "hello" }).ok).toBe(false);
     expect(checkDraft({ ...base, lane: "skip", draft: "hello" }).ok).toBe(false);
   });
+  it("rejects apologies for the customer's feelings, in any lane", () => {
+    for (const d of ["We are sorry you felt this way.", "So sorry your visit left you feeling this way.", "Sorry if you were upset."]) {
+      const r = checkDraft({ ...base, draft: d });
+      expect(r.ok, d).toBe(false);
+      expect(r.problems.join()).toContain("how the customer felt");
+    }
+    expect(checkDraft({ ...base, draft: "We are sorry about your experience." }).ok).toBe(true);
+  });
+  it("requires a health reply to acknowledge that someone was unwell or harmed", () => {
+    const h = { ...base, lane: "restricted" as const, category: "health_safety" };
+    expect(checkDraft({ ...h, draft: "We are sorry to hear about your experience and take it seriously." }).ok).toBe(false);
+    expect(checkDraft({ ...h, draft: "We are very sorry to hear you and your partner were unwell, and hope you are both well now. We take this seriously." }).ok).toBe(true);
+    expect(checkDraft({ ...h, category: "discrimination", draft: "We are sorry about your experience and take it seriously." }).ok).toBe(true);
+  });
   it("rejects empty and overlong drafts", () => {
     expect(checkDraft({ ...base, draft: " " }).ok).toBe(false);
     expect(checkDraft({ ...base, draft: "a".repeat(701) }).ok).toBe(false);

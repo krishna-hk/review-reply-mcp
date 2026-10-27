@@ -42,6 +42,8 @@ export interface DraftCheckInput {
   /** Phone numbers, emails and links the owner has put in their profile. */
   allowedContacts?: string[];
   maxLength?: number;
+  /** For serious reviews: why it was flagged (health_safety, legal_threat, ...). */
+  category?: string | null;
 }
 
 export interface DraftCheck {
@@ -59,6 +61,9 @@ const PROMISE_PATTERNS: [RegExp, string][] = [
 const ADMISSION_PATTERNS: [RegExp, string][] = [
   [/\b(our|my) fault\b|\bwe (admit|accept (full )?(blame|responsibility|liability))\b|\bliable\b|\bnegligen/i, "admits fault or liability"],
 ];
+
+const FEELINGS_APOLOGY = /\bsorry (that |if )?you (felt|feel)\b|\b(felt|feeling) this way\b|\bsorry if\b/i;
+const HEALTH_ACKNOWLEDGEMENT = /\b(unwell|ill|sick|harm|hurt|injur|health|well)\b/i;
 
 const norm = (s: string) => s.toLowerCase();
 
@@ -85,6 +90,9 @@ export function checkDraft(input: DraftCheckInput): DraftCheck {
     if (phrase.trim() && norm(draft).includes(norm(phrase))) problems.push(`uses a phrase the owner never wants said: "${phrase}"`);
   }
   for (const [re, label] of PROMISE_PATTERNS) if (re.test(draft)) problems.push(label);
+  if (FEELINGS_APOLOGY.test(draft)) problems.push('apologises for how the customer felt ("sorry you felt", "feeling this way", "sorry if"); apologise for what happened instead');
+  if (lane === "restricted" && input.category === "health_safety" && !HEALTH_ACKNOWLEDGEMENT.test(draft))
+    problems.push("a health or safety reply must say they are sorry the customer or their family was unwell or harmed, and hope they are well, without confirming the cause");
   if (lane === "restricted") for (const [re, label] of ADMISSION_PATTERNS) if (re.test(draft)) problems.push(label);
 
   const known = new Set([...(input.allowedContacts ?? []), ...extractContacts(input.reviewText)].map(norm));
