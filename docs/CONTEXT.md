@@ -117,3 +117,7 @@ The live PRD artifact: https://claude.ai/artifact/BRswaYfJHpaokTkGZd8nmR (source
 - Gemini free tier allows about 20 requests a day per model, so tests used Claude sub-agents instead of an API run. A Claude API key has not been created.
 - Next: checkpoint 5 (public hosting on Cloudflare Workers + D1, remote MCP over Streamable HTTP, Mode B limits). Needs a free Cloudflare account from Hari. Then checkpoint 6, pilot.
 - Standing rule found in testing: wording rules the AI must follow belong in code checks, not only in instructions.
+
+## 14. Pilot scope decision (27 Oct 2026)
+
+Mode B (hosted AI on Hari's API key) is **out of scope for the pilot and for now**. The product is for people who already have their own Claude or ChatGPT subscription and connect the server to it. Mode B code, quotas and budget limits are not built. A Cloudflare account exists; deploying needs Hari to run `npx wrangler login` once.
