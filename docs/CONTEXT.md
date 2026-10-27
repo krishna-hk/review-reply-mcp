@@ -121,3 +121,7 @@ The live PRD artifact: https://claude.ai/artifact/BRswaYfJHpaokTkGZd8nmR (source
 ## 14. Pilot scope decision (27 Oct 2026)
 
 Mode B (hosted AI on Hari's API key) is **out of scope for the pilot and for now**. The product is for people who already have their own Claude or ChatGPT subscription and connect the server to it. Mode B code, quotas and budget limits are not built. A Cloudflare account exists; deploying needs Hari to run `npx wrangler login` once.
+
+## 15. Hosted server live (27 Oct 2026)
+
+Deployed to Cloudflare Workers with D1 at `https://review-reply-mcp.hk-reviews-mcp.workers.dev` (account subdomain `hk-reviews-mcp`). Personal links `/mcp/<secret>` per tester; admin password in `data/private/admin-token.txt` (Git-ignored) and as a Worker secret. 80 tests pass, and the Worker was also run in Cloudflare's local runtime. See `docs/HOSTED_SERVER.md`. Not yet done: connect a real Claude connector to the hosted link, test ChatGPT, write a plain-language privacy statement, pilot.
