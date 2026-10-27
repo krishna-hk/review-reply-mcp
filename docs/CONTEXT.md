@@ -110,3 +110,10 @@ The live PRD artifact: https://claude.ai/artifact/BRswaYfJHpaokTkGZd8nmR (source
 - **Repeated-phrase alerts:** not in v1.
 - **PRD updated (Revision 2, 23 Oct 2026) with Hari's approval:** TypeScript stack, two new themes, English only, rating-only replies, restricted lane, spam handling. The live Claude Docs PRD artifact has not been updated; `docs/PRD.md` is now the newer copy. Further PRD edits still need Hari's approval.
 - **Still to do:** Hari labels 30 reviews blind; checkpoint 2 core engine.
+
+## 13. Status after checkpoint 4 (27 Oct 2026)
+
+- Checkpoints 0 to 4 are done: sample data and key, core engine, tested AI instructions (tagging 88.9% on a sealed 20, 96.7% on a fresh 20, serious-review recall 100%), and a working local MCP server connected to Hari's Claude desktop app. See `docs/CHECKPOINT3_RESULTS.md` and `docs/CHECKPOINT4_RESULTS.md`.
+- Gemini free tier allows about 20 requests a day per model, so tests used Claude sub-agents instead of an API run. A Claude API key has not been created.
+- Next: checkpoint 5 (public hosting on Cloudflare Workers + D1, remote MCP over Streamable HTTP, Mode B limits). Needs a free Cloudflare account from Hari. Then checkpoint 6, pilot.
+- Standing rule found in testing: wording rules the AI must follow belong in code checks, not only in instructions.
