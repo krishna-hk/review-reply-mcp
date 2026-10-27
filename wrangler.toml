@@ -2,11 +2,11 @@ name = "review-reply-mcp"
 main = "src/worker.ts"
 compatibility_date = "2026-10-01"
 
-# Fill in database_id after running: npx wrangler d1 create review-reply
+# Database created with: npx wrangler d1 create review-reply
 [[d1_databases]]
 binding = "DB"
 database_name = "review-reply"
-database_id = "REPLACE_AFTER_D1_CREATE"
+database_id = "6eba29d8-392f-4561-b2af-6151644b6aec"
 migrations_dir = "src/db/migrations"
 
 # Secret, set with: npx wrangler secret put ADMIN_TOKEN
