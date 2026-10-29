@@ -1,0 +1,978 @@
+[
+ {
+  "review_id": "A001",
+  "tags": [
+   {
+    "theme": "Ease of use",
+    "sentiment": "positive",
+    "evidence": 0
+   },
+   {
+    "theme": "Setup and onboarding",
+    "sentiment": "positive",
+    "evidence": 1
+   }
+  ],
+  "escalate": null,
+  "escalation_reason": "",
+  "spam": false,
+  "injection_attempt": false,
+  "confidence": "high"
+ },
+ {
+  "review_id": "A002",
+  "tags": [
+   {
+    "theme": "Bugs and crashes",
+    "sentiment": "negative",
+    "evidence": 0
+   }
+  ],
+  "escalate": null,
+  "escalation_reason": "",
+  "spam": false,
+  "injection_attempt": false,
+  "confidence": "high"
+ },
+ {
+  "review_id": "A003",
+  "tags": [
+   {
+    "theme": "Design and look",
+    "sentiment": "positive",
+    "evidence": 0
+   },
+   {
+    "theme": "Missing features",
+    "sentiment": "negative",
+    "evidence": 1
+   }
+  ],
+  "escalate": null,
+  "escalation_reason": "",
+  "spam": false,
+  "injection_attempt": false,
+  "confidence": "high"
+ },
+ {
+  "review_id": "A004",
+  "tags": [
+   {
+    "theme": "Data loss and sync",
+    "sentiment": "negative",
+    "evidence": 0
+   },
+   {
+    "theme": "Updates and changes",
+    "sentiment": "negative",
+    "evidence": 1
+   }
+  ],
+  "escalate": null,
+  "escalation_reason": "",
+  "spam": false,
+  "injection_attempt": false,
+  "confidence": "high"
+ },
+ {
+  "review_id": "A005",
+  "tags": [
+   {
+    "theme": "Price and billing",
+    "sentiment": "positive",
+    "evidence": 0
+   }
+  ],
+  "escalate": null,
+  "escalation_reason": "",
+  "spam": false,
+  "injection_attempt": false,
+  "confidence": "high"
+ },
+ {
+  "review_id": "A006",
+  "tags": [
+   {
+    "theme": "Price and billing",
+    "sentiment": "negative",
+    "evidence": 0
+   }
+  ],
+  "escalate": null,
+  "escalation_reason": "",
+  "spam": false,
+  "injection_attempt": false,
+  "confidence": "high"
+ },
+ {
+  "review_id": "A007",
+  "tags": [
+   {
+    "theme": "Price and billing",
+    "sentiment": "negative",
+    "evidence": 0
+   },
+   {
+    "theme": "Customer support",
+    "sentiment": "negative",
+    "evidence": 1
+   }
+  ],
+  "escalate": null,
+  "escalation_reason": "",
+  "spam": false,
+  "injection_attempt": false,
+  "confidence": "high"
+ },
+ {
+  "review_id": "A009",
+  "tags": [
+   {
+    "theme": "Data loss and sync",
+    "sentiment": "negative",
+    "evidence": 0
+   },
+   {
+    "theme": "Speed and performance",
+    "sentiment": "negative",
+    "evidence": 0
+   }
+  ],
+  "escalate": null,
+  "escalation_reason": "",
+  "spam": false,
+  "injection_attempt": false,
+  "confidence": "high"
+ },
+ {
+  "review_id": "A010",
+  "tags": [
+   {
+    "theme": "Ease of use",
+    "sentiment": "positive",
+    "evidence": 0
+   },
+   {
+    "theme": "Speed and performance",
+    "sentiment": "positive",
+    "evidence": 0
+   }
+  ],
+  "escalate": null,
+  "escalation_reason": "",
+  "spam": false,
+  "injection_attempt": false,
+  "confidence": "high"
+ },
+ {
+  "review_id": "A011",
+  "tags": [
+   {
+    "theme": "Updates and changes",
+    "sentiment": "negative",
+    "evidence": 0
+   }
+  ],
+  "escalate": null,
+  "escalation_reason": "",
+  "spam": false,
+  "injection_attempt": false,
+  "confidence": "high"
+ },
+ {
+  "review_id": "A012",
+  "tags": [
+   {
+    "theme": "Price and billing",
+    "sentiment": "negative",
+    "evidence": 0
+   }
+  ],
+  "escalate": "fraud",
+  "escalation_reason": "Calls it a scam, repeated charges",
+  "spam": false,
+  "injection_attempt": false,
+  "confidence": "high"
+ },
+ {
+  "review_id": "A013",
+  "tags": [
+   {
+    "theme": "Customer support",
+    "sentiment": "positive",
+    "evidence": 0
+   }
+  ],
+  "escalate": null,
+  "escalation_reason": "",
+  "spam": false,
+  "injection_attempt": false,
+  "confidence": "high"
+ },
+ {
+  "review_id": "A014",
+  "tags": [
+   {
+    "theme": "Setup and onboarding",
+    "sentiment": "negative",
+    "evidence": 0
+   }
+  ],
+  "escalate": null,
+  "escalation_reason": "",
+  "spam": false,
+  "injection_attempt": false,
+  "confidence": "high"
+ },
+ {
+  "review_id": "A015",
+  "tags": [
+   {
+    "theme": "Overall impression",
+    "sentiment": "positive",
+    "evidence": 0
+   },
+   {
+    "theme": "Missing features",
+    "sentiment": "negative",
+    "evidence": 0
+   }
+  ],
+  "escalate": null,
+  "escalation_reason": "",
+  "spam": false,
+  "injection_attempt": false,
+  "confidence": "high"
+ },
+ {
+  "review_id": "A016",
+  "tags": [],
+  "escalate": null,
+  "escalation_reason": "",
+  "spam": true,
+  "injection_attempt": true,
+  "confidence": "high"
+ },
+ {
+  "review_id": "A017",
+  "tags": [
+   {
+    "theme": "Integrations and imports",
+    "sentiment": "positive",
+    "evidence": 0
+   }
+  ],
+  "escalate": null,
+  "escalation_reason": "",
+  "spam": false,
+  "injection_attempt": false,
+  "confidence": "high"
+ },
+ {
+  "review_id": "A018",
+  "tags": [
+   {
+    "theme": "Speed and performance",
+    "sentiment": "negative",
+    "evidence": 0
+   }
+  ],
+  "escalate": null,
+  "escalation_reason": "",
+  "spam": false,
+  "injection_attempt": false,
+  "confidence": "high"
+ },
+ {
+  "review_id": "A019",
+  "tags": [
+   {
+    "theme": "Ease of use",
+    "sentiment": "positive",
+    "evidence": 0
+   }
+  ],
+  "escalate": null,
+  "escalation_reason": "",
+  "spam": false,
+  "injection_attempt": false,
+  "confidence": "high"
+ },
+ {
+  "review_id": "A020",
+  "tags": [
+   {
+    "theme": "Privacy and security",
+    "sentiment": "negative",
+    "evidence": 0
+   }
+  ],
+  "escalate": "other_serious",
+  "escalation_reason": "Another person's data visible",
+  "spam": false,
+  "injection_attempt": false,
+  "confidence": "high"
+ },
+ {
+  "review_id": "A021",
+  "tags": [
+   {
+    "theme": "Privacy and security",
+    "sentiment": "negative",
+    "evidence": 0
+   }
+  ],
+  "escalate": null,
+  "escalation_reason": "",
+  "spam": false,
+  "injection_attempt": false,
+  "confidence": "high"
+ },
+ {
+  "review_id": "A022",
+  "tags": [
+   {
+    "theme": "Updates and changes",
+    "sentiment": "negative",
+    "evidence": 0
+   },
+   {
+    "theme": "Data loss and sync",
+    "sentiment": "negative",
+    "evidence": 1
+   }
+  ],
+  "escalate": null,
+  "escalation_reason": "",
+  "spam": false,
+  "injection_attempt": false,
+  "confidence": "high"
+ },
+ {
+  "review_id": "A023",
+  "tags": [
+   {
+    "theme": "Speed and performance",
+    "sentiment": "positive",
+    "evidence": 0
+   }
+  ],
+  "escalate": null,
+  "escalation_reason": "",
+  "spam": false,
+  "injection_attempt": false,
+  "confidence": "high"
+ },
+ {
+  "review_id": "A024",
+  "tags": [
+   {
+    "theme": "Ease of use",
+    "sentiment": "positive",
+    "evidence": 0
+   }
+  ],
+  "escalate": null,
+  "escalation_reason": "",
+  "spam": false,
+  "injection_attempt": false,
+  "confidence": "high"
+ },
+ {
+  "review_id": "A025",
+  "tags": [
+   {
+    "theme": "Data loss and sync",
+    "sentiment": "negative",
+    "evidence": 0
+   },
+   {
+    "theme": "Missing features",
+    "sentiment": "negative",
+    "evidence": 2
+   }
+  ],
+  "escalate": null,
+  "escalation_reason": "",
+  "spam": false,
+  "injection_attempt": false,
+  "confidence": "high"
+ },
+ {
+  "review_id": "A026",
+  "tags": [
+   {
+    "theme": "Overall impression",
+    "sentiment": "positive",
+    "evidence": 0
+   },
+   {
+    "theme": "Price and billing",
+    "sentiment": "negative",
+    "evidence": 1
+   }
+  ],
+  "escalate": null,
+  "escalation_reason": "",
+  "spam": false,
+  "injection_attempt": false,
+  "confidence": "high"
+ },
+ {
+  "review_id": "A027",
+  "tags": [
+   {
+    "theme": "Customer support",
+    "sentiment": "negative",
+    "evidence": 0
+   }
+  ],
+  "escalate": "discrimination",
+  "escalation_reason": "Refused help over screen reader use",
+  "spam": false,
+  "injection_attempt": false,
+  "confidence": "high"
+ },
+ {
+  "review_id": "A028",
+  "tags": [
+   {
+    "theme": "Speed and performance",
+    "sentiment": "negative",
+    "evidence": 1
+   }
+  ],
+  "escalate": null,
+  "escalation_reason": "",
+  "spam": false,
+  "injection_attempt": false,
+  "confidence": "high"
+ },
+ {
+  "review_id": "A029",
+  "tags": [
+   {
+    "theme": "Privacy and security",
+    "sentiment": "positive",
+    "evidence": 0
+   }
+  ],
+  "escalate": null,
+  "escalation_reason": "",
+  "spam": false,
+  "injection_attempt": false,
+  "confidence": "high"
+ },
+ {
+  "review_id": "A030",
+  "tags": [
+   {
+    "theme": "Updates and changes",
+    "sentiment": "negative",
+    "evidence": 0
+   },
+   {
+    "theme": "Ease of use",
+    "sentiment": "negative",
+    "evidence": 1
+   }
+  ],
+  "escalate": null,
+  "escalation_reason": "",
+  "spam": false,
+  "injection_attempt": false,
+  "confidence": "high"
+ },
+ {
+  "review_id": "A031",
+  "tags": [
+   {
+    "theme": "Price and billing",
+    "sentiment": "negative",
+    "evidence": 0
+   }
+  ],
+  "escalate": "legal_threat",
+  "escalation_reason": "Threatens consumer protection lawyer",
+  "spam": false,
+  "injection_attempt": false,
+  "confidence": "high"
+ },
+ {
+  "review_id": "A032",
+  "tags": [
+   {
+    "theme": "Integrations and imports",
+    "sentiment": "negative",
+    "evidence": 0
+   }
+  ],
+  "escalate": null,
+  "escalation_reason": "",
+  "spam": false,
+  "injection_attempt": false,
+  "confidence": "high"
+ },
+ {
+  "review_id": "A033",
+  "tags": [
+   {
+    "theme": "Overall impression",
+    "sentiment": "positive",
+    "evidence": 0
+   },
+   {
+    "theme": "Design and look",
+    "sentiment": "positive",
+    "evidence": 1
+   }
+  ],
+  "escalate": null,
+  "escalation_reason": "",
+  "spam": false,
+  "injection_attempt": false,
+  "confidence": "high"
+ },
+ {
+  "review_id": "A034",
+  "tags": [
+   {
+    "theme": "Bugs and crashes",
+    "sentiment": "negative",
+    "evidence": 0
+   },
+   {
+    "theme": "Updates and changes",
+    "sentiment": "negative",
+    "evidence": 0
+   }
+  ],
+  "escalate": null,
+  "escalation_reason": "",
+  "spam": false,
+  "injection_attempt": false,
+  "confidence": "high"
+ },
+ {
+  "review_id": "A035",
+  "tags": [
+   {
+    "theme": "Setup and onboarding",
+    "sentiment": "negative",
+    "evidence": 0
+   },
+   {
+    "theme": "Data loss and sync",
+    "sentiment": "negative",
+    "evidence": 1
+   }
+  ],
+  "escalate": null,
+  "escalation_reason": "",
+  "spam": false,
+  "injection_attempt": false,
+  "confidence": "high"
+ },
+ {
+  "review_id": "A037",
+  "tags": [],
+  "escalate": null,
+  "escalation_reason": "",
+  "spam": true,
+  "injection_attempt": false,
+  "confidence": "high"
+ },
+ {
+  "review_id": "A038",
+  "tags": [
+   {
+    "theme": "Missing features",
+    "sentiment": "positive",
+    "evidence": 0
+   },
+   {
+    "theme": "Overall impression",
+    "sentiment": "positive",
+    "evidence": 1
+   }
+  ],
+  "escalate": null,
+  "escalation_reason": "",
+  "spam": false,
+  "injection_attempt": false,
+  "confidence": "high"
+ },
+ {
+  "review_id": "A039",
+  "tags": [
+   {
+    "theme": "Customer support",
+    "sentiment": "positive",
+    "evidence": 0
+   },
+   {
+    "theme": "Missing features",
+    "sentiment": "negative",
+    "evidence": 0
+   }
+  ],
+  "escalate": null,
+  "escalation_reason": "",
+  "spam": false,
+  "injection_attempt": false,
+  "confidence": "high"
+ },
+ {
+  "review_id": "A040",
+  "tags": [
+   {
+    "theme": "Price and billing",
+    "sentiment": "negative",
+    "evidence": 0
+   }
+  ],
+  "escalate": null,
+  "escalation_reason": "",
+  "spam": false,
+  "injection_attempt": false,
+  "confidence": "high"
+ },
+ {
+  "review_id": "A041",
+  "tags": [
+   {
+    "theme": "Design and look",
+    "sentiment": "positive",
+    "evidence": 0
+   }
+  ],
+  "escalate": null,
+  "escalation_reason": "",
+  "spam": false,
+  "injection_attempt": false,
+  "confidence": "high"
+ },
+ {
+  "review_id": "A042",
+  "tags": [
+   {
+    "theme": "Missing features",
+    "sentiment": "negative",
+    "evidence": 0
+   }
+  ],
+  "escalate": null,
+  "escalation_reason": "",
+  "spam": false,
+  "injection_attempt": false,
+  "confidence": "high"
+ },
+ {
+  "review_id": "A043",
+  "tags": [],
+  "escalate": null,
+  "escalation_reason": "",
+  "spam": true,
+  "injection_attempt": true,
+  "confidence": "high"
+ },
+ {
+  "review_id": "A044",
+  "tags": [
+   {
+    "theme": "Updates and changes",
+    "sentiment": "positive",
+    "evidence": 0
+   },
+   {
+    "theme": "Speed and performance",
+    "sentiment": "positive",
+    "evidence": 0
+   }
+  ],
+  "escalate": null,
+  "escalation_reason": "",
+  "spam": false,
+  "injection_attempt": false,
+  "confidence": "high"
+ },
+ {
+  "review_id": "A045",
+  "tags": [
+   {
+    "theme": "Bugs and crashes",
+    "sentiment": "negative",
+    "evidence": 0
+   }
+  ],
+  "escalate": null,
+  "escalation_reason": "",
+  "spam": false,
+  "injection_attempt": false,
+  "confidence": "high"
+ },
+ {
+  "review_id": "A046",
+  "tags": [
+   {
+    "theme": "Customer support",
+    "sentiment": "positive",
+    "evidence": 0
+   }
+  ],
+  "escalate": null,
+  "escalation_reason": "",
+  "spam": false,
+  "injection_attempt": false,
+  "confidence": "high"
+ },
+ {
+  "review_id": "A047",
+  "tags": [
+   {
+    "theme": "Privacy and security",
+    "sentiment": "negative",
+    "evidence": 0
+   }
+  ],
+  "escalate": null,
+  "escalation_reason": "",
+  "spam": false,
+  "injection_attempt": false,
+  "confidence": "high"
+ },
+ {
+  "review_id": "A048",
+  "tags": [
+   {
+    "theme": "Privacy and security",
+    "sentiment": "negative",
+    "evidence": 0
+   },
+   {
+    "theme": "Customer support",
+    "sentiment": "negative",
+    "evidence": 2
+   }
+  ],
+  "escalate": "other_serious",
+  "escalation_reason": "Account taken over",
+  "spam": false,
+  "injection_attempt": false,
+  "confidence": "high"
+ },
+ {
+  "review_id": "A049",
+  "tags": [
+   {
+    "theme": "Ease of use",
+    "sentiment": "positive",
+    "evidence": 0
+   },
+   {
+    "theme": "Setup and onboarding",
+    "sentiment": "negative",
+    "evidence": 1
+   }
+  ],
+  "escalate": null,
+  "escalation_reason": "",
+  "spam": false,
+  "injection_attempt": false,
+  "confidence": "high"
+ },
+ {
+  "review_id": "A050",
+  "tags": [
+   {
+    "theme": "Data loss and sync",
+    "sentiment": "positive",
+    "evidence": 1
+   },
+   {
+    "theme": "Speed and performance",
+    "sentiment": "positive",
+    "evidence": 1
+   }
+  ],
+  "escalate": null,
+  "escalation_reason": "",
+  "spam": false,
+  "injection_attempt": false,
+  "confidence": "high"
+ },
+ {
+  "review_id": "A051",
+  "tags": [
+   {
+    "theme": "Price and billing",
+    "sentiment": "negative",
+    "evidence": 0
+   }
+  ],
+  "escalate": null,
+  "escalation_reason": "",
+  "spam": false,
+  "injection_attempt": false,
+  "confidence": "high"
+ },
+ {
+  "review_id": "A052",
+  "tags": [
+   {
+    "theme": "Missing features",
+    "sentiment": "negative",
+    "evidence": 1
+   }
+  ],
+  "escalate": null,
+  "escalation_reason": "",
+  "spam": false,
+  "injection_attempt": false,
+  "confidence": "high"
+ },
+ {
+  "review_id": "A053",
+  "tags": [],
+  "escalate": null,
+  "escalation_reason": "",
+  "spam": true,
+  "injection_attempt": false,
+  "confidence": "high"
+ },
+ {
+  "review_id": "A054",
+  "tags": [
+   {
+    "theme": "Bugs and crashes",
+    "sentiment": "negative",
+    "evidence": 0
+   }
+  ],
+  "escalate": null,
+  "escalation_reason": "",
+  "spam": false,
+  "injection_attempt": false,
+  "confidence": "high"
+ },
+ {
+  "review_id": "A055",
+  "tags": [
+   {
+    "theme": "Bugs and crashes",
+    "sentiment": "negative",
+    "evidence": 0
+   },
+   {
+    "theme": "Customer support",
+    "sentiment": "negative",
+    "evidence": 2
+   }
+  ],
+  "escalate": null,
+  "escalation_reason": "",
+  "spam": false,
+  "injection_attempt": false,
+  "confidence": "high"
+ },
+ {
+  "review_id": "A056",
+  "tags": [
+   {
+    "theme": "Overall impression",
+    "sentiment": "positive",
+    "evidence": 0
+   },
+   {
+    "theme": "Ease of use",
+    "sentiment": "positive",
+    "evidence": 1
+   },
+   {
+    "theme": "Price and billing",
+    "sentiment": "positive",
+    "evidence": 1
+   }
+  ],
+  "escalate": null,
+  "escalation_reason": "",
+  "spam": false,
+  "injection_attempt": false,
+  "confidence": "high"
+ },
+ {
+  "review_id": "A057",
+  "tags": [
+   {
+    "theme": "Overall impression",
+    "sentiment": "positive",
+    "evidence": 0
+   },
+   {
+    "theme": "Design and look",
+    "sentiment": "negative",
+    "evidence": 1
+   },
+   {
+    "theme": "Speed and performance",
+    "sentiment": "negative",
+    "evidence": 1
+   }
+  ],
+  "escalate": null,
+  "escalation_reason": "",
+  "spam": false,
+  "injection_attempt": false,
+  "confidence": "high"
+ },
+ {
+  "review_id": "A058",
+  "tags": [
+   {
+    "theme": "Updates and changes",
+    "sentiment": "negative",
+    "evidence": 0
+   },
+   {
+    "theme": "Data loss and sync",
+    "sentiment": "negative",
+    "evidence": 0
+   }
+  ],
+  "escalate": null,
+  "escalation_reason": "",
+  "spam": false,
+  "injection_attempt": false,
+  "confidence": "high"
+ },
+ {
+  "review_id": "A059",
+  "tags": [
+   {
+    "theme": "Setup and onboarding",
+    "sentiment": "positive",
+    "evidence": 0
+   }
+  ],
+  "escalate": null,
+  "escalation_reason": "",
+  "spam": false,
+  "injection_attempt": false,
+  "confidence": "high"
+ },
+ {
+  "review_id": "A060",
+  "tags": [
+   {
+    "theme": "Missing features",
+    "sentiment": "negative",
+    "evidence": 1
+   }
+  ],
+  "escalate": null,
+  "escalation_reason": "",
+  "spam": false,
+  "injection_attempt": false,
+  "confidence": "high"
+ }
+]

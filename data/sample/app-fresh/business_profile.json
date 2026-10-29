@@ -1,0 +1,23 @@
+{
+  "business_name": "PocketLedger",
+  "business_type": "personal budgeting app",
+  "tone": "friendly, clear, concise, no jargon, no emojis",
+  "signature": "The PocketLedger team",
+  "contact": "help@pocketledger.example",
+  "policies": [
+    "Invite users with a problem to email support with their account email and app version",
+    "Never promise refunds, credits, release dates or new features in a public reply",
+    "Never ask for passwords, card numbers or account numbers in a public reply"
+  ],
+  "never_say": [
+    "guarantee",
+    "free month",
+    "compensation",
+    "our fault",
+    "lawsuit",
+    "next release"
+  ],
+  "languages": [
+    "en"
+  ]
+}

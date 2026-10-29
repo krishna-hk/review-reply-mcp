@@ -136,3 +136,12 @@ Hari decided the product should not be restaurant-only: restaurant owners rarely
 - **Sample data for measuring:** `data/sample/app/reviews.csv` (A001 to A060), `data/sample/app/business_profile.json`, and a blank labelling sheet `data/sample/app/labelling_sheet.xlsx` for Hari. Rules: `docs/LABELLING_GUIDE_APP.md`. Hari's labels become the answer key; no answer key written by us exists, to keep it blind.
 - **Not yet re-measured:** the generic prompt plus restaurant rules has passed the stand-in tests only. It must be re-measured with a Claude sub-agent on the restaurant sets, and the app prompt measured against Hari's labels, before any accuracy number is quoted.
 - **Next:** Hari labels the 60 app reviews; measure; fix the guide or rules; redeploy hosted server (migration 0004 must be applied to D1 before the new code); then checkpoint 5 leftovers (privacy statement, ChatGPT test) and the pilot with product managers.
+
+## 17. Labels reconciled and re-measured (29 Oct 2026)
+
+- Hari's 60 labels were reconciled with the written rules using `data/sample/app/reconciliation_sheet.xlsx`. Rule rows took our rule; judgment rows took our proposal (Hari: any 1% right is fine). The new `answer_key.csv` is the reconciled version; the original labels are in git history (commit f52e7b0). Hari decided: A007 (double charge, no reply) is NOT serious; A020 and A027 are serious.
+- **Theme changes (app list):** "Reliability and data safety" renamed "Data loss and sync" (not privacy). New theme "Overall impression" (a verdict with no reason; added beside specific themes, never instead of one). 13 themes plus Other. Rules added to `prompts/guidance-app.md`. No saved owner uses the old name (Hari's hosted owner has no app themes), so no data migration.
+- **Re-measure on the 58 text reviews (tuned set, rules written after seeing them):** 95.7% tag F1, 5 of 5 serious, 4 of 4 spam. Do not quote as final accuracy.
+- **Fresh set** `data/sample/app-fresh/` (A061 to A080, 19 with text): 94.1% tag F1, 1 of 1 serious, 2 of 2 spam/injection. Caveats: Claude wrote the reviews and the answer key (Hari has not checked the key yet), only 19 reviews, and the two misses were defensible. A trustworthy number needs Hari to spot-check this key or label a new batch himself.
+- Still to re-measure: the restaurant prompt (generic template plus restaurant guidance).
+- Docs added: `docs/PRIVACY.md` (draft), `docs/FINDING_PMS.md`, `docs/CONNECT_AND_TEST.md`.

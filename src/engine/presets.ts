@@ -21,7 +21,7 @@ export const PRESETS: Preset[] = [
     themes: [
       t("Bugs and crashes", "Crashes, error messages, things that do not work as intended", "Quality"),
       t("Speed and performance", "Slow loading, lag, freezing, battery or storage use", "Quality"),
-      t("Reliability and data safety", "Sync failures, lost or wrong data, outages", "Quality"),
+      t("Data loss and sync", "Lost, wrong or duplicated data, sync failures, outages; NOT privacy or security", "Quality"),
       t("Ease of use", "Confusing screens, hard to find things, learning curve; or simple and intuitive", "Experience"),
       t("Setup and onboarding", "Signing up, logging in, password reset, first-run, moving data in", "Experience"),
       t("Design and look", "Appearance, colours, dark mode, layout, icons", "Experience"),
@@ -31,6 +31,7 @@ export const PRESETS: Preset[] = [
       t("Price and billing", "Cost, paywalls, plans, subscriptions, charges and refunds", "Money and support"),
       t("Customer support", "How fast and helpful the support team was", "Money and support"),
       t("Privacy and security", "Permissions, tracking, data collection, account security", "Trust"),
+      t("Overall impression", "A verdict on the whole product with no reason given, such as Good app or Best one I have used", "Overall"),
       OTHER_DEF,
     ],
     guidance: GUIDANCE["app"] ?? "",

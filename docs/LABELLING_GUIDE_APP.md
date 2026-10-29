@@ -4,13 +4,13 @@ How to label the 60 sample reviews for a made-up budgeting app called PocketLedg
 
 All reviews are invented. Nothing here is a real person or app.
 
-## The 13 themes
+## The 14 themes
 
 | Theme | Counts as | Near-miss (do not tag) |
 | --- | --- | --- |
 | Bugs and crashes | Crashes, error messages, things that do not work as intended | "Slow to load" (Speed and performance) |
 | Speed and performance | Slow loading, lag, freezing, battery or storage use; or fast and light | "Crashes on launch" (Bugs and crashes) |
-| Reliability and data safety | Sync failures, lost or wrongly synced data, outages; or "never lost data" | "Login failed" (Setup and onboarding) |
+| Data loss and sync | Lost, wrong or duplicated data, sync failures, outages; or "never lost data". Not privacy. | "Login failed" (Setup and onboarding) |
 | Ease of use | Confusing screens, hard-to-find options; or simple, intuitive | "Looks ugly" (Design and look) |
 | Setup and onboarding | Signing up, logging in, password reset, first-run tour, moving data in | "Import from CSV" (Integrations and imports) |
 | Design and look | Colours, dark mode, layout, icons, font size | "Hard to find the button" (Ease of use) |
@@ -19,7 +19,8 @@ All reviews are invented. Nothing here is a real person or app.
 | Updates and changes | A new version breaking, removing, changing or improving something | A bug with no mention of an update (Bugs and crashes) |
 | Price and billing | Cost, paywalls, subscriptions, double charges, refunds | "Support did not answer" (Customer support) |
 | Customer support | How fast and helpful the support team was | "App crashed" (Bugs and crashes) |
-| Privacy and security | Permissions, tracking, data collection, account security | "Lost my data" (Reliability and data safety) |
+| Privacy and security | Permissions, tracking, data collection, account security | "Lost my data" (Data loss and sync) |
+| Overall impression | A verdict on the whole product with no reason: "Good app", "Best money app I've used", "No complaints". Add it beside specific themes; never instead of one, and never use Speed and performance for general praise | "Fast and clean" (the specific themes) |
 | Other | Anything that fits none of the above | Anything that fits a theme above |
 
 ## Rules
@@ -30,7 +31,7 @@ All reviews are invented. Nothing here is a real person or app.
 4. **Sarcasm:** label the intended meaning ("Really intuitive" said sarcastically is bad for Ease of use).
 5. **Rating-only reviews** (no text): leave every tag empty. **One-word reviews:** tag only if the word names a theme ("Slow." is Speed and performance, bad).
 6. **A bug that appeared after an update** gets Updates and changes (bad) and the theme of the thing that broke.
-7. **Lost or wrongly synced data** is Reliability and data safety (bad). Add Bugs and crashes only if a crash or error is described.
+7. **Lost or wrongly synced data** is Data loss and sync (bad). Add Bugs and crashes only if a crash or error is described.
 8. **Can't log in, no verification email, bank link fails during setup** is Setup and onboarding (bad). Add Bugs and crashes only if an error or crash is described.
 9. **Charged twice, charged after cancelling, or a refund refused** is Price and billing (bad). Support not replying is also Customer support (bad).
 10. **Praise for a feature that exists** goes under the theme it is about (usually Ease of use). "Has everything I need" is Missing features (good).

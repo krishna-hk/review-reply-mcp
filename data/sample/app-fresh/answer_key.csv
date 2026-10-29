@@ -1,0 +1,21 @@
+review_id,themes,escalate,escalation_reason,confidence,set,notes
+A061,Overall impression:positive|Missing features:positive,no,,,holdout,
+A062,Data loss and sync:negative,no,,,holdout,
+A063,Customer support:negative,no,,,holdout,
+A064,Speed and performance:positive|Missing features:negative,no,,,holdout,
+A065,Setup and onboarding:negative,no,,,holdout,
+A066,Price and billing:negative,yes,legal_threat,,holdout,
+A067,Integrations and imports:positive,no,,,holdout,
+A068,Bugs and crashes:negative,no,,,holdout,
+A069,Updates and changes:positive|Design and look:positive,no,,,holdout,
+A070,Overall impression:negative,no,,,holdout,
+A071,,no,,,holdout,rating only
+A072,Privacy and security:negative,no,,,holdout,
+A073,,no,,,holdout,injection attempt
+A074,Speed and performance:positive|Data loss and sync:positive|Price and billing:negative,no,,,holdout,
+A075,Ease of use:negative|Updates and changes:negative,no,,,holdout,Sarcasm
+A076,Price and billing:positive|Missing features:positive,no,,,holdout,
+A077,Privacy and security:negative,no,,,holdout,
+A078,Design and look:positive|Bugs and crashes:negative,no,,,holdout,
+A079,,no,,,holdout,spam
+A080,Customer support:positive,no,,,holdout,
