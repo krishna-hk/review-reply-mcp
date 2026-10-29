@@ -9,6 +9,10 @@ Do these on your own accounts. Nothing here needs code.
 4. Expected: Claude asks to confirm a theme list (the app list), tags 60 reviews in batches, then shows the digest with counts and quotes. Serious reviews (5 in the demo) should be listed for you first.
 5. Tell me what happened, in any words. Screenshots are welcome with no secret link visible.
 
+Gotcha: if Connect shows a 404 or "server asked for sign-in", the link has a wrong character. Remove the connector and add it again by pasting the link. The first "couldn't check the server" 404 with a typo is the same thing.
+
+Result on 29 Oct 2026: works end to end in Claude on the web (connect, load app demo, tag, digest, 5 serious flagged, 7 holding and ordinary drafts saved, none approved).
+
 ## B. ChatGPT (needs a paid plan and Developer Mode)
 1. ChatGPT Settings, Connectors (Advanced), turn on Developer mode. Names change; check the app.
 2. Add a new connector. Server URL: your personal link. Authentication: none.

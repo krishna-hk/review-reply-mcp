@@ -8,6 +8,8 @@ Each tester gets a personal link of the form `https://review-reply-mcp.hk-review
 
 **Claude (web or desktop app):** Settings, Connectors, Add custom connector. Name it "Review Reply", paste the link as the URL, leave any sign-in fields empty. Menu names change; check them in the app. In a new chat: "Load the app demo data, then run my weekly review check." (Say "restaurant demo" for the restaurant one.)
 
+**Tested 29 Oct 2026 in Claude on the web:** the connector connected with "No sign-in", showed all 15 tools, and a new chat loaded the app demo, tagged 60 reviews in 3 batches, found the 5 serious ones, built the digest and saved 7 drafts. Claude asks permission for each tool call (Allow once). If Connect says "404" or "asked for sign-in", the link was probably mistyped: paste it, do not type it.
+
 **ChatGPT:** needs Developer Mode on a paid plan and a public https address, which this is. Add the link as a connector with no authentication. Not yet tested by us.
 
 Each person's data is separate. "Delete all my data" in the chat wipes their reviews and keeps their link working.
