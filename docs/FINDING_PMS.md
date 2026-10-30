@@ -45,3 +45,16 @@ Name or initials, where found, date asked, answered yes/no, link sent, imported,
 - Never send a link before they have read the privacy statement.
 - Do not publish any tester's data or name without written permission.
 - Pricing and plan limits stay labelled "verify at deploy time".
+
+## Message variants (draft, nothing sent)
+**Warm contact (short):** "Hey <name>, can I borrow 30 minutes? I built a small free tool that turns a CSV of customer feedback into tagged themes, flags the serious ones, and drafts replies you approve. I want one real product person to break it. Would you try it on an export of your own?"
+
+**Community post:** "Looking for 3 to 5 product people to test a free tool for customer feedback (app reviews, tickets, survey comments). Works inside your own Claude or ChatGPT. No signup, you can delete everything after. 30 minutes, then a short chat. Comment or DM if you have a feedback export you can share."
+
+**Follow-up after 3 days:** "No worries if it is not a fit. If it is easier, I can run it on a public set of app reviews with you watching, so you need no data."
+
+## Order of work
+1. Hari edits and approves one message. 2. Send to 10 warm contacts first; wait 3 days. 3. Post once in one community if fewer than 3 yeses. 4. For each yes: create a link (docs/HOSTED_SERVER.md), send the link, docs/PRIVACY.md and docs/TESTER_GUIDE.md together. 5. Book the call. 6. Track in docs/pilot/tracker-template.csv (keep a private copy outside git if it holds names). 7. After the calls: write the case study with names removed and quotes only with written permission.
+
+## Timing (estimates, mostly waiting)
+Day 0 approve message; days 1 to 3 asks; days 3 to 7 setup calls; days 7 to 14 testers try it; days 14 to 18 calls; days 18 to 21 case study.
