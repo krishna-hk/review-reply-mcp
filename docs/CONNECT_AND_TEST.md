@@ -13,7 +13,7 @@ Gotcha: if Connect shows a 404 or "server asked for sign-in", the link has a wro
 
 Result on 29 Oct 2026: works end to end in Claude on the web (connect, load app demo, tag, digest, 5 serious flagged, 7 holding and ordinary drafts saved, none approved).
 
-## B. ChatGPT (needs a paid plan and Developer Mode)
+## B. ChatGPT (done 30 Oct 2026 on a Go account; see docs/HOSTED_SERVER.md for the exact path)
 1. ChatGPT Settings, Connectors (Advanced), turn on Developer mode. Names change; check the app.
 2. Add a new connector. Server URL: your personal link. Authentication: none.
 3. New chat with that connector enabled: "Load the app demo data, then run my weekly review check."

@@ -124,7 +124,7 @@ Mode B (hosted AI on Hari's API key) is **out of scope for the pilot and for now
 
 ## 15. Hosted server live (27 Oct 2026)
 
-Deployed to Cloudflare Workers with D1 at `https://review-reply-mcp.hk-reviews-mcp.workers.dev` (account subdomain `hk-reviews-mcp`). Personal links `/mcp/<secret>` per tester; admin password in `data/private/admin-token.txt` (Git-ignored) and as a Worker secret. 80 tests pass, and the Worker was also run in Cloudflare's local runtime. See `docs/HOSTED_SERVER.md`. Done 29 Oct 2026: Claude web connector tested end to end. Not yet done: test ChatGPT, write a plain-language privacy statement, pilot.
+Deployed to Cloudflare Workers with D1 at `https://review-reply-mcp.hk-reviews-mcp.workers.dev` (account subdomain `hk-reviews-mcp`). Personal links `/mcp/<secret>` per tester; admin password in `data/private/admin-token.txt` (Git-ignored) and as a Worker secret. 80 tests pass, and the Worker was also run in Cloudflare's local runtime. See `docs/HOSTED_SERVER.md`. Done 29 Oct 2026: Claude web connector tested end to end. ChatGPT tested 30 Oct 2026 (works). Not yet done:, write a plain-language privacy statement, pilot.
 
 ## 16. Direction change: any business, product managers first (28 Oct 2026)
 

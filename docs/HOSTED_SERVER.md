@@ -10,7 +10,7 @@ Each tester gets a personal link of the form `https://review-reply-mcp.hk-review
 
 **Tested 29 Oct 2026 in Claude on the web:** the connector connected with "No sign-in", showed all 15 tools, and a new chat loaded the app demo, tagged 60 reviews in 3 batches, found the 5 serious ones, built the digest and saved 7 drafts. Claude asks permission for each tool call (Allow once). If Connect says "404" or "asked for sign-in", the link was probably mistyped: paste it, do not type it.
 
-**ChatGPT:** needs Developer Mode on a paid plan and a public https address, which this is. Add the link as a connector with no authentication. Not yet tested by us.
+**ChatGPT:** tested 30 Oct 2026 on a ChatGPT Go account (no Developer Mode switch was needed). Path: Plugins, Add, Add custom MCP server; name it, paste the link, choose No authentication, tick the risk box, Create, then Connect. In a new chat start with @Review Reply. It loaded the app demo, tagged 60 reviews, found the 5 serious ones, built the digest and saved 2 drafts without approving. Plan names and menus change, so check them in the app. Without a hint, ChatGPT picked a 7-day digest window; the weekly prompt now says to keep the default 90 days.
 
 Each person's data is separate. "Delete all my data" in the chat wipes their reviews and keeps their link working.
 
